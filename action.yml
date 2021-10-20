@@ -1,0 +1,42 @@
+---
+name: 'Version Increment'
+description: |
+  Inspects the git tags to determine the current normal version, and returns the
+  next version number.
+
+  A normal version will be returned if the branch is the default branch
+  (usually `main`), otherwise a pre-release version will be returned.
+
+inputs:
+  scheme:
+    description: 'Versioning scheme - semver, or, calver (defaults to semver)'
+    required: false
+    default: 'semver'
+  increment:
+    description: |
+      Field to increment - major, minor, or, patch (defaults to patch)
+
+      Not applicable to `calver` scheme
+    required: false
+    default: 'patch'
+
+outputs:
+  current_version:
+    description: 'Current normal version detected'
+    value: ${{ steps.version-lookup.outputs.current-version }}
+  version:
+    description: 'Incremented version calculated'
+    value: ${{ steps.version-increment.outputs.version }}
+
+runs:
+  using: "composite"
+  steps:
+    - id: version-lookup
+      run: ${{ github.action_path }}/version-lookup.sh
+      shell: bash
+
+    - id: version-increment
+      run: ${{ github.action_path }}/version-increment.sh
+      shell: bash
+      with:
+        current_version: ${{ steps.version-lookup.outputs.current-version }}
