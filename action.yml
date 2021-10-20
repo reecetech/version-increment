@@ -37,5 +37,5 @@ runs:
     - id: version-increment
       run: ${{ github.action_path }}/version-increment.sh
       shell: bash
-      with:
+      env:
         current_version: ${{ steps.version-lookup.outputs.current-version }}
