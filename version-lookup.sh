@@ -6,9 +6,7 @@ script_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 # shellcheck source=shared.sh
 source "${script_dir}/shared.sh"
 
-scheme="${INPUT_SCHEME:-semver}"
-if [[ "${scheme}" != 'semver' && "${scheme}" != 'calver' ]] ; then
-    echo "🛑 Value of 'scheme' is not valid, choose from 'semver' or 'calver'" 1>&2
+if [[ "${input_errors}" == 'true' ]] ; then
     exit 8
 fi
 

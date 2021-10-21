@@ -6,25 +6,21 @@ script_dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 # shellcheck source=shared.sh
 source "${script_dir}/shared.sh"
 
-if [[ -z "${current_version:-}" ]] ; then
-    echo "🛑 Environment variable 'current_version' is unset or empty" 1>&2
-    exit 5
-fi
-
-if [[ -z "$(echo "${current_version}" | ${grep} -P "${pcre_master_ver}")" ]] ; then
-    echo "🛑 Environment variable 'current_version' is not a valid normal version (M.m.p)" 1>&2
-    exit 6
-fi
-
 increment="${INPUT_INCREMENT:-patch}"
 if [[ "${increment}" != 'patch' && "${increment}" != 'minor' && "${increment}" != 'major' ]] ; then
     echo "🛑 Value of 'increment' is not valid, choose from 'major', 'minor', or 'patch'" 1>&2
-    exit 7
+    input_errors='true'
 fi
 
-scheme="${INPUT_SCHEME:-semver}"
-if [[ "${scheme}" != 'semver' && "${scheme}" != 'calver' ]] ; then
-    echo "🛑 Value of 'scheme' is not valid, choose from 'semver' or 'calver'" 1>&2
+if [[ -z "${current_version:-}" ]] ; then
+    echo "🛑 Environment variable 'current_version' is unset or empty" 1>&2
+    input_errors='true'
+elif [[ -z "$(echo "${current_version}" | ${grep} -P "${pcre_master_ver}")" ]] ; then
+    echo "🛑 Environment variable 'current_version' is not a valid normal version (M.m.p)" 1>&2
+    input_errors='true'
+fi
+
+if [[ "${input_errors}" == 'true' ]] ; then
     exit 8
 fi
 

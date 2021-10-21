@@ -6,7 +6,7 @@
 
 ```yaml
       - name: Get next version
-        uses: reecetech/version-increment@2021.10.3
+        uses: reecetech/version-increment@2021.10.4
         id: version
         with:
           scheme: semver

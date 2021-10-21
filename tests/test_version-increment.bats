@@ -25,7 +25,7 @@ function init_repo {
     run ../../version-increment.sh
 
     print_run_info
-    [ "$status" -eq 5 ] &&
+    [ "$status" -eq 8 ] &&
     [[ "$output" = *"Environment variable 'current_version' is unset or empty"* ]]
 }
 
@@ -37,14 +37,13 @@ function init_repo {
     run ../../version-increment.sh
 
     print_run_info
-    [ "$status" -eq 6 ] &&
+    [ "$status" -eq 8 ] &&
     [[ "$output" = *"Environment variable 'current_version' is not a valid normal version"* ]]
 }
 
 @test "fails if invalid scheme given" {
     init_repo
 
-    export current_version=1.2.3
     export INPUT_SCHEME="foover"
 
     run ../../version-increment.sh
@@ -57,13 +56,12 @@ function init_repo {
 @test "fails if invalid increment given" {
     init_repo
 
-    export current_version=1.2.3
     export INPUT_INCREMENT="critical"
 
     run ../../version-increment.sh
 
     print_run_info
-    [ "$status" -eq 7 ] &&
+    [ "$status" -eq 8 ] &&
     [[ "$output" = *"Value of 'increment' is not valid, choose from 'major', 'minor', or 'patch'"* ]]
 }
 
