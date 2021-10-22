@@ -20,7 +20,7 @@ function init_repo {
 @test "fails if invalid scheme given" {
     init_repo
 
-    export INPUT_SCHEME="foover"
+    export scheme="foover"
 
     run ../../version-lookup.sh
 
@@ -81,7 +81,7 @@ function init_repo {
 @test "returns a calver if no normal version detected and calver scheme specified" {
     init_repo
 
-    export INPUT_SCHEME="calver"
+    export scheme="calver"
 
     run ../../version-lookup.sh
 

@@ -52,7 +52,7 @@ jobs:
         run: ./version-increment.sh
         env:
           current_version: ${{ steps.version-lookup.outputs.current-version }}
-          INPUT_SCHEME: calver
+          scheme: calver
 
       - name: Release version
         uses: marvinpinto/action-automatic-releases@919008cf3f741b179569b7a6fb4d8860689ab7f0

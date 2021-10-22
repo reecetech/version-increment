@@ -44,7 +44,7 @@ function init_repo {
 @test "fails if invalid scheme given" {
     init_repo
 
-    export INPUT_SCHEME="foover"
+    export scheme="foover"
 
     run ../../version-increment.sh
 
@@ -56,7 +56,7 @@ function init_repo {
 @test "fails if invalid increment given" {
     init_repo
 
-    export INPUT_INCREMENT="critical"
+    export increment="critical"
 
     run ../../version-increment.sh
 
@@ -69,7 +69,7 @@ function init_repo {
     init_repo
 
     export current_version=1.2.3
-    export INPUT_INCREMENT="patch"
+    export increment="patch"
 
     run ../../version-increment.sh
 
@@ -82,7 +82,7 @@ function init_repo {
     init_repo
 
     export current_version=1.2.3
-    export INPUT_INCREMENT="minor"
+    export increment="minor"
 
     run ../../version-increment.sh
 
@@ -95,7 +95,7 @@ function init_repo {
     init_repo
 
     export current_version=1.2.3
-    export INPUT_INCREMENT="major"
+    export increment="major"
 
     run ../../version-increment.sh
 
@@ -108,7 +108,7 @@ function init_repo {
     init_repo
 
     export current_version=2020.6.4
-    export INPUT_SCHEME="calver"
+    export scheme="calver"
 
     run ../../version-increment.sh
 
@@ -121,7 +121,7 @@ function init_repo {
     init_repo
 
     export current_version="$(date +%Y.%-m.123)"
-    export INPUT_SCHEME="calver"
+    export scheme="calver"
 
     run ../../version-increment.sh
 

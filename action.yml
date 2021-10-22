@@ -33,9 +33,13 @@ runs:
     - id: version-lookup
       run: ${{ github.action_path }}/version-lookup.sh
       shell: bash
+      env:
+        scheme: ${{ inputs.scheme }}
 
     - id: version-increment
       run: ${{ github.action_path }}/version-increment.sh
       shell: bash
       env:
         current_version: ${{ steps.version-lookup.outputs.current-version }}
+        increment: ${{ inputs.increment }}
+        scheme: ${{ inputs.scheme }}
