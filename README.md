@@ -5,6 +5,9 @@
 ### ⌨️ Example
 
 ```yaml
+      - name: Checkout code
+        uses: actions/checkout@v2
+
       - name: Get next version
         uses: reecetech/version-increment@2021.10.4
         id: version

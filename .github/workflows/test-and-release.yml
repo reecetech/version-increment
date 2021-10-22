@@ -29,7 +29,7 @@ jobs:
       - name: Setup bats
         uses: mig4/setup-bats@af9a00deb21b5d795cabfeaa8d9060410377686d
         with:
-          bats-version: 1.2.1
+          bats-version: 1.4.1
 
       - name: Test
         run: bats tests/*.bats
@@ -52,7 +52,7 @@ jobs:
         run: ./version-increment.sh
         env:
           current_version: ${{ steps.version-lookup.outputs.current-version }}
-          INPUT_SCHEME: calver
+          scheme: calver
 
       - name: Release version
         uses: marvinpinto/action-automatic-releases@919008cf3f741b179569b7a6fb4d8860689ab7f0
