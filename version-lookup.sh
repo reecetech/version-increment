@@ -62,3 +62,4 @@ fi
 echo "ℹ️ The current normal version is ${current_version}"
 
 echo "::set-output name=current-version::${current_version}"
+echo "::set-output name=current-v-version::v${current_version}"

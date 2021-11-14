@@ -9,7 +9,7 @@
         uses: actions/checkout@v2
 
       - name: Get next version
-        uses: reecetech/version-increment@2021.11.1
+        uses: reecetech/version-increment@2021.11.2
         id: version
         with:
           scheme: semver
@@ -82,10 +82,12 @@ Examples:
 
 ### 📤 Outputs
 
-| name            | description                                                        |
-| :---            | :---                                                               |
-| current_version | The current latest version detected from the git repositories tags |
-| version         | The incremented version number (e.g. the next version)             |
+| name              | description                                                                                       |
+| :---              | :---                                                                                              |
+| current-version   | The current latest version detected from the git repositories tags                                |
+| current-v-version | The current latest version detected from the git repositories tags, prefixed with a `v` character |
+| version           | The incremented version number (e.g. the next version)                                            |
+| v-version         | The incremented version number (e.g. the next version), prefixed with a `v` character             |
 
 ## 💕 Contributing
 
