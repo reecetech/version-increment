@@ -104,6 +104,20 @@ function init_repo {
     [[ "$output" = *"::set-output name=version::2.0.0"* ]]
 }
 
+@test "prefixes with v" {
+    init_repo
+
+    export current_version=1.2.3
+    export increment="major"
+
+    run ../../version-increment.sh
+
+    print_run_info
+    [ "$status" -eq 0 ] &&
+    [[ "$output" = *"::set-output name=version::2.0.0"* ]] &&
+    [[ "$output" = *"::set-output name=v-version::v2.0.0"* ]]
+}
+
 @test "increments to a new month (calver)" {
     init_repo
 

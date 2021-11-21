@@ -87,3 +87,4 @@ fi
 echo "ℹ️ The new version is ${new_version}"
 
 echo "::set-output name=version::${new_version}"
+echo "::set-output name=v-version::v${new_version}"

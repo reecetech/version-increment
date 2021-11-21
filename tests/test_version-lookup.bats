@@ -43,6 +43,19 @@ function init_repo {
     [[ "$output" = *"::set-output name=current-version::0.1.2"* ]]
 }
 
+@test "prefixes with a v" {
+    init_repo
+
+    git tag 0.1.2
+
+    run ../../version-lookup.sh
+
+    print_run_info
+    [ "$status" -eq 0 ] &&
+    [[ "$output" = *"::set-output name=current-version::0.1.2"* ]] &&
+    [[ "$output" = *"::set-output name=current-v-version::v0.1.2"* ]]
+}
+
 @test "finds the current normal version even if there's a newer pre-release version" {
     init_repo
 
