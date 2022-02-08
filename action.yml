@@ -20,12 +20,18 @@ inputs:
     default: 'patch'
 
 outputs:
-  current_version:
+  current-version:
     description: 'Current normal version detected'
     value: ${{ steps.version-lookup.outputs.current-version }}
+  current-v-version:
+    description: 'Current normal version detected, prefixed with a `v` charatcter'
+    value: v${{ steps.version-lookup.outputs.current-version }}
   version:
     description: 'Incremented version calculated'
     value: ${{ steps.version-increment.outputs.version }}
+  v-version:
+    description: 'Incremented version calculated, prefixed with a `v` charatcter'
+    value: v${{ steps.version-increment.outputs.version }}  
 
 runs:
   using: "composite"
