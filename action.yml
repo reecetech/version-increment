@@ -25,13 +25,13 @@ outputs:
     value: ${{ steps.version-lookup.outputs.current-version }}
   current-v-version:
     description: 'Current normal version detected, prefixed with a `v` charatcter'
-    value: v${{ steps.version-lookup.outputs.current-version }}
+    value: ${{ steps.version-lookup.outputs.current-v-version }}
   version:
     description: 'Incremented version calculated'
     value: ${{ steps.version-increment.outputs.version }}
   v-version:
     description: 'Incremented version calculated, prefixed with a `v` charatcter'
-    value: v${{ steps.version-increment.outputs.version }}  
+    value: ${{ steps.version-increment.outputs.v-version }}  
 
 runs:
   using: "composite"
