@@ -75,6 +75,9 @@ function init_repo {
 
     print_run_info
     [ "$status" -eq 0 ] &&
+    [[ "$output" = *"::set-output name=major-version::1"* ]] &&
+    [[ "$output" = *"::set-output name=minor-version::2"* ]] &&
+    [[ "$output" = *"::set-output name=patch-version::4"* ]] &&
     [[ "$output" = *"::set-output name=version::1.2.4"* ]]
 }
 
@@ -88,6 +91,9 @@ function init_repo {
 
     print_run_info
     [ "$status" -eq 0 ] &&
+    [[ "$output" = *"::set-output name=major-version::1"* ]] &&
+    [[ "$output" = *"::set-output name=minor-version::3"* ]] &&
+    [[ "$output" = *"::set-output name=patch-version::0"* ]] &&
     [[ "$output" = *"::set-output name=version::1.3.0"* ]]
 }
 
@@ -101,6 +107,9 @@ function init_repo {
 
     print_run_info
     [ "$status" -eq 0 ] &&
+    [[ "$output" = *"::set-output name=major-version::2"* ]] &&
+    [[ "$output" = *"::set-output name=minor-version::0"* ]] &&
+    [[ "$output" = *"::set-output name=patch-version::0"* ]] &&
     [[ "$output" = *"::set-output name=version::2.0.0"* ]]
 }
 
@@ -115,6 +124,9 @@ function init_repo {
     print_run_info
     [ "$status" -eq 0 ] &&
     [[ "$output" = *"::set-output name=version::2.0.0"* ]] &&
+    [[ "$output" = *"::set-output name=major-v-version::v2"* ]] &&
+    [[ "$output" = *"::set-output name=minor-v-version::v0"* ]] &&
+    [[ "$output" = *"::set-output name=patch-v-version::v0"* ]] &&
     [[ "$output" = *"::set-output name=v-version::v2.0.0"* ]]
 }
 
