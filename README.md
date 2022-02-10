@@ -91,6 +91,9 @@ Examples:
 | major-version     | Major number of the incremented version                                                           |
 | minor-version     | Minor number of the incremented version                                                           |
 | patch-version     | Patch number of the incremented version                                                           |
+| major-v-version   | Major number of the incremented version, prefixed with a `v` character                            |
+| minor-v-version   | Minor number of the incremented version, prefixed with a `v` character                            |
+| patch-v-version   | Patch number of the incremented version, prefixed with a `v` character                            |
 
 ## 💕 Contributing
 
