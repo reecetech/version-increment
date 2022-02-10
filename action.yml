@@ -32,6 +32,24 @@ outputs:
   v-version:
     description: 'Incremented version calculated, prefixed with a `v` charatcter'
     value: ${{ steps.version-increment.outputs.v-version }}  
+  major-version:
+    description: 'Major number of the incremented version'
+    value: ${{ steps.version-increment.outputs.major-version }}
+  minor-version:
+    description: 'Minor number of the incremented version'
+    value: ${{ steps.version-increment.outputs.minor-version }}
+  patch-version:
+    description: 'Patch number of the incremented version'
+    value: ${{ steps.version-increment.outputs.patch-version }}
+  major-v-version:
+    description: 'Major number of the incremented version, prefixed with a `v` charatcter'
+    value: ${{ steps.version-increment.outputs.major-v-version }}
+  minor-v-version:
+    description: 'Minor number of the incremented version, prefixed with a `v` charatcter'
+    value: ${{ steps.version-increment.outputs.minor-v-version }}
+  patch-v-version:
+    description: 'Patch number of the incremented version, prefixed with a `v` charatcter'
+    value: ${{ steps.version-increment.outputs.patch-v-version }}
 
 runs:
   using: "composite"
