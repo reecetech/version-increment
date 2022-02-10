@@ -9,7 +9,7 @@
         uses: actions/checkout@v2
 
       - name: Get next version
-        uses: reecetech/version-increment@2022.2.3
+        uses: reecetech/version-increment@2022.2.4
         id: version
         with:
           scheme: semver
@@ -88,6 +88,9 @@ Examples:
 | current-v-version | The current latest version detected from the git repositories tags, prefixed with a `v` character |
 | version           | The incremented version number (e.g. the next version)                                            |
 | v-version         | The incremented version number (e.g. the next version), prefixed with a `v` character             |
+| major-version     | Major number of the incremented version                                                           |
+| minor-version     | Minor number of the incremented version                                                           |
+| patch-version     | Patch number of the incremented version                                                           |
 
 ## 💕 Contributing
 

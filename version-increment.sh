@@ -88,3 +88,6 @@ echo "ℹ️ The new version is ${new_version}"
 
 echo "::set-output name=version::${new_version}"
 echo "::set-output name=v-version::v${new_version}"
+echo "::set-output name=major-version::v${version_array[0]}"
+echo "::set-output name=minor-version::v${version_array[1]}"
+echo "::set-output name=patch-version::v${version_array[2]}"
