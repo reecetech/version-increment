@@ -27,7 +27,7 @@ fi
 
 # Skip if testing, otherwise pull tags
 if [[ -z "${BATS_VERSION:-}" ]] ; then
-    git fetch --quiet origin 'refs/tags/*:refs/tags/*'
+    git fetch --quiet --force origin 'refs/tags/*:refs/tags/*'
 fi
 
 ##==----------------------------------------------------------------------------
