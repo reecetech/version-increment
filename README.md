@@ -9,7 +9,7 @@
         uses: actions/checkout@v2
 
       - name: Get next version
-        uses: reecetech/version-increment@2022.2.4
+        uses: reecetech/version-increment@2022.5.1
         id: version
         with:
           scheme: semver
@@ -91,6 +91,7 @@ Examples:
 | major-version     | Major number of the incremented version                                                           |
 | minor-version     | Minor number of the incremented version                                                           |
 | patch-version     | Patch number of the incremented version                                                           |
+| pre-release-label | Pre-release label of the incremented version                                                      |
 | major-v-version   | Major number of the incremented version, prefixed with a `v` character                            |
 | minor-v-version   | Minor number of the incremented version, prefixed with a `v` character                            |
 | patch-v-version   | Patch number of the incremented version, prefixed with a `v` character                            |
