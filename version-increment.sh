@@ -74,7 +74,9 @@ fi
 
 # add pre-release info to version if not the default branch
 if [[ "${current_ref}" != "refs/heads/${default_branch}" ]] ; then
-    new_version="${new_version}-pre.${git_commit}"
+    pre_release="pre.${git_commit}"
+    new_version="${new_version}-${pre_release}"
+    echo "::set-output name=pre-release-label::${pre_release}"
 fi
 
 if [[ -z "$(echo "${new_version}" | ${grep} -P "${pcre_semver}")" ]] ; then
