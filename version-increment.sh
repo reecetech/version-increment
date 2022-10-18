@@ -76,7 +76,7 @@ fi
 if [[ "${current_ref}" != "refs/heads/${default_branch}" ]] ; then
     pre_release="pre.${git_commit}"
     new_version="${new_version}-${pre_release}"
-    echo "::set-output name=pre-release-label::${pre_release}"
+    echo "PRE_RELEASE_LABEL=${pre_release}" >> "${GITHUB_OUTPUT}"
 fi
 
 if [[ -z "$(echo "${new_version}" | ${grep} -P "${pcre_semver}")" ]] ; then
@@ -88,11 +88,12 @@ fi
 
 echo "ℹ️ The new version is ${new_version}"
 
-echo "::set-output name=version::${new_version}"
-echo "::set-output name=v-version::v${new_version}"
-echo "::set-output name=major-version::${version_array[0]}"
-echo "::set-output name=minor-version::${version_array[1]}"
-echo "::set-output name=patch-version::${version_array[2]}"
-echo "::set-output name=major-v-version::v${version_array[0]}"
-echo "::set-output name=minor-v-version::v${version_array[1]}"
-echo "::set-output name=patch-v-version::v${version_array[2]}"
+# shellcheck disable=SC2129
+echo "VERSION=${new_version}" >> "${GITHUB_OUTPUT}"
+echo "V_VERSION=v${new_version}" >> "${GITHUB_OUTPUT}"
+echo "MAJOR_VERSION=${version_array[0]}" >> "${GITHUB_OUTPUT}"
+echo "MINOR_VERSION=${version_array[1]}" >> "${GITHUB_OUTPUT}"
+echo "PATCH_VERSION=${version_array[2]}" >> "${GITHUB_OUTPUT}"
+echo "MAJOR_V_VERSION=v${version_array[0]}" >> "${GITHUB_OUTPUT}"
+echo "MINOR_V_VERSION=v${version_array[1]}" >> "${GITHUB_OUTPUT}"
+echo "PATCH_V_VERSION=v${version_array[2]}" >> "${GITHUB_OUTPUT}"
