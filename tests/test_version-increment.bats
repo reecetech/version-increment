@@ -65,6 +65,13 @@ function init_repo {
     [[ "$output" = *"Value of 'increment' is not valid, choose from 'major', 'minor', or 'patch'"* ]]
 }
 
+@test "no deprecated set-output calls made" {
+    run grep -q "::set-output" version-increment.sh
+
+    print_run_info
+    [ "$status" -eq 1 ]
+}
+
 @test "increments the patch digit correctly (semver)" {
     init_repo
 
@@ -75,10 +82,10 @@ function init_repo {
 
     print_run_info
     [ "$status" -eq 0 ] &&
-    [[ "$output" = *"::set-output name=major-version::1"* ]] &&
-    [[ "$output" = *"::set-output name=minor-version::2"* ]] &&
-    [[ "$output" = *"::set-output name=patch-version::4"* ]] &&
-    [[ "$output" = *"::set-output name=version::1.2.4"* ]]
+    [[ "$output" = *"MAJOR_VERSION=1"* ]] &&
+    [[ "$output" = *"MINOR_VERSION=2"* ]] &&
+    [[ "$output" = *"PATCH_VERSION=4"* ]] &&
+    [[ "$output" = *"VERSION=1.2.4"* ]]
 }
 
 @test "increments the minor digit correctly (semver)" {
@@ -91,10 +98,10 @@ function init_repo {
 
     print_run_info
     [ "$status" -eq 0 ] &&
-    [[ "$output" = *"::set-output name=major-version::1"* ]] &&
-    [[ "$output" = *"::set-output name=minor-version::3"* ]] &&
-    [[ "$output" = *"::set-output name=patch-version::0"* ]] &&
-    [[ "$output" = *"::set-output name=version::1.3.0"* ]]
+    [[ "$output" = *"MAJOR_VERSION=1"* ]] &&
+    [[ "$output" = *"MINOR_VERSION=3"* ]] &&
+    [[ "$output" = *"PATCH_VERSION=0"* ]] &&
+    [[ "$output" = *"VERSION=1.3.0"* ]]
 }
 
 @test "increments the major digit correctly (semver)" {
@@ -107,10 +114,10 @@ function init_repo {
 
     print_run_info
     [ "$status" -eq 0 ] &&
-    [[ "$output" = *"::set-output name=major-version::2"* ]] &&
-    [[ "$output" = *"::set-output name=minor-version::0"* ]] &&
-    [[ "$output" = *"::set-output name=patch-version::0"* ]] &&
-    [[ "$output" = *"::set-output name=version::2.0.0"* ]]
+    [[ "$output" = *"MAJOR_VERSION=2"* ]] &&
+    [[ "$output" = *"MINOR_VERSION=0"* ]] &&
+    [[ "$output" = *"PATCH_VERSION=0"* ]] &&
+    [[ "$output" = *"VERSION=2.0.0"* ]]
 }
 
 @test "prefixes with v" {
@@ -123,11 +130,11 @@ function init_repo {
 
     print_run_info
     [ "$status" -eq 0 ] &&
-    [[ "$output" = *"::set-output name=version::2.0.0"* ]] &&
-    [[ "$output" = *"::set-output name=major-v-version::v2"* ]] &&
-    [[ "$output" = *"::set-output name=minor-v-version::v0"* ]] &&
-    [[ "$output" = *"::set-output name=patch-v-version::v0"* ]] &&
-    [[ "$output" = *"::set-output name=v-version::v2.0.0"* ]]
+    [[ "$output" = *"VERSION=2.0.0"* ]] &&
+    [[ "$output" = *"MAJOR_V_VERSION=v2"* ]] &&
+    [[ "$output" = *"MINOR_V_VERSION=v0"* ]] &&
+    [[ "$output" = *"PATCH_V_VERSION=v0"* ]] &&
+    [[ "$output" = *"V_VERSION=v2.0.0"* ]]
 }
 
 @test "increments to a new month (calver)" {
@@ -140,7 +147,7 @@ function init_repo {
 
     print_run_info
     [ "$status" -eq 0 ] &&
-    [[ "$output" = *"::set-output name=version::$(date +%Y.%-m.1)"* ]]
+    [[ "$output" = *"VERSION=$(date +%Y.%-m.1)"* ]]
 }
 
 @test "increments the patch digit within a month (calver)" {
@@ -153,7 +160,7 @@ function init_repo {
 
     print_run_info
     [ "$status" -eq 0 ] &&
-    [[ "$output" = *"::set-output name=version::$(date +%Y.%-m.124)"* ]]
+    [[ "$output" = *"VERSION=$(date +%Y.%-m.124)"* ]]
 }
 
 @test "appends prerelease information if on a branch" {
@@ -167,5 +174,6 @@ function init_repo {
 
     print_run_info
     [ "$status" -eq 0 ] &&
-    [[ "$output" = *"::set-output name=version::1.2.4-pre.${short_ref}"* ]]
+    [[ "$output" = *"PRE_RELEASE_LABEL=pre.${short_ref}"* ]]
+    [[ "$output" = *"VERSION=1.2.4-pre.${short_ref}"* ]]
 }

@@ -29,6 +29,13 @@ function init_repo {
     [[ "$output" = *"Value of 'scheme' is not valid"* ]]
 }
 
+@test "no deprecated set-output calls made" {
+    run grep -q "::set-output" version-lookup.sh
+
+    print_run_info
+    [ "$status" -eq 1 ]
+}
+
 @test "finds the current normal version" {
     init_repo
 
@@ -40,7 +47,7 @@ function init_repo {
 
     print_run_info
     [ "$status" -eq 0 ] &&
-    [[ "$output" = *"::set-output name=current-version::0.1.2"* ]]
+    [[ "$output" = *"CURRENT_VERSION=0.1.2"* ]]
 }
 
 @test "prefixes with a v" {
@@ -52,8 +59,8 @@ function init_repo {
 
     print_run_info
     [ "$status" -eq 0 ] &&
-    [[ "$output" = *"::set-output name=current-version::0.1.2"* ]] &&
-    [[ "$output" = *"::set-output name=current-v-version::v0.1.2"* ]]
+    [[ "$output" = *"CURRENT_VERSION=0.1.2"* ]] &&
+    [[ "$output" = *"CURRENT_V_VERSION=v0.1.2"* ]]
 }
 
 @test "finds the current normal version even if there's a newer pre-release version" {
@@ -66,7 +73,7 @@ function init_repo {
 
     print_run_info
     [ "$status" -eq 0 ] &&
-    [[ "$output" = *"::set-output name=current-version::1.2.300"* ]]
+    [[ "$output" = *"CURRENT_VERSION=1.2.300"* ]]
 }
 
 @test "returns 0.0.0 if no normal version detected" {
@@ -76,7 +83,7 @@ function init_repo {
 
     print_run_info
     [ "$status" -eq 0 ] &&
-    [[ "$output" = *"::set-output name=current-version::0.0.0"* ]]
+    [[ "$output" = *"CURRENT_VERSION=0.0.0"* ]]
 }
 
 @test "returns 0.0.0 if no normal version detected even if there's a pre-release version" {
@@ -88,7 +95,7 @@ function init_repo {
 
     print_run_info
     [ "$status" -eq 0 ] &&
-    [[ "$output" = *"::set-output name=current-version::0.0.0"* ]]
+    [[ "$output" = *"CURRENT_VERSION=0.0.0"* ]]
 }
 
 @test "returns a calver if no normal version detected and calver scheme specified" {
@@ -100,7 +107,7 @@ function init_repo {
 
     print_run_info
     [ "$status" -eq 0 ] &&
-    [[ "$output" = *"::set-output name=current-version::$(date '+%Y.%-m.0')"* ]]
+    [[ "$output" = *"CURRENT_VERSION=$(date '+%Y.%-m.0')"* ]]
 }
 
 @test "converts from older calver scheme automatically" {
@@ -112,7 +119,7 @@ function init_repo {
 
     print_run_info
     [ "$status" -eq 0 ] &&
-    [[ "$output" = *"::set-output name=current-version::2020.9.2"* ]]
+    [[ "$output" = *"CURRENT_VERSION=2020.9.2"* ]]
 }
 
 @test "strips v from the version" {
@@ -124,5 +131,5 @@ function init_repo {
 
     print_run_info
     [ "$status" -eq 0 ] &&
-    [[ "$output" = *"::set-output name=current-version::3.4.5"* ]]
+    [[ "$output" = *"CURRENT_VERSION=3.4.5"* ]]
 }
