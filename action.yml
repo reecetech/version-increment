@@ -22,37 +22,37 @@ inputs:
 outputs:
   current-version:
     description: 'Current normal version detected'
-    value: ${{ steps.version-lookup.outputs.current-version }}
+    value: ${{ steps.version-lookup.outputs.CURRENT_VERSION }}
   current-v-version:
     description: 'Current normal version detected, prefixed with a `v` charatcter'
-    value: ${{ steps.version-lookup.outputs.current-v-version }}
+    value: ${{ steps.version-lookup.outputs.CURRENT_V_VERSION }}
   version:
     description: 'Incremented version calculated'
-    value: ${{ steps.version-increment.outputs.version }}
+    value: ${{ steps.version-increment.outputs.VERSION }}
   v-version:
     description: 'Incremented version calculated, prefixed with a `v` charatcter'
-    value: ${{ steps.version-increment.outputs.v-version }}  
+    value: ${{ steps.version-increment.outputs.V_VERSION }}  
   major-version:
     description: 'Major number of the incremented version'
-    value: ${{ steps.version-increment.outputs.major-version }}
+    value: ${{ steps.version-increment.outputs.MAJOR_VERSION }}
   minor-version:
     description: 'Minor number of the incremented version'
-    value: ${{ steps.version-increment.outputs.minor-version }}
+    value: ${{ steps.version-increment.outputs.MINOR_VERSION }}
   patch-version:
     description: 'Patch number of the incremented version'
-    value: ${{ steps.version-increment.outputs.patch-version }}
+    value: ${{ steps.version-increment.outputs.PATCH_VERSION }}
   pre-release-version:
     description: 'Pre-release label of the incremented version'
-    value: ${{ steps.version-increment.outputs.pre-release-label }}
+    value: ${{ steps.version-increment.outputs.PRE_RELEASE_LABEL }}
   major-v-version:
     description: 'Major number of the incremented version, prefixed with a `v` charatcter'
-    value: ${{ steps.version-increment.outputs.major-v-version }}
+    value: ${{ steps.version-increment.outputs.MAJOR_V_VERSION }}
   minor-v-version:
     description: 'Minor number of the incremented version, prefixed with a `v` charatcter'
-    value: ${{ steps.version-increment.outputs.minor-v-version }}
+    value: ${{ steps.version-increment.outputs.MINOR_V_VERSION }}
   patch-v-version:
     description: 'Patch number of the incremented version, prefixed with a `v` charatcter'
-    value: ${{ steps.version-increment.outputs.patch-v-version }}
+    value: ${{ steps.version-increment.outputs.PATCH_V_VERSION }}
 
 runs:
   using: "composite"
@@ -67,6 +67,6 @@ runs:
       run: ${{ github.action_path }}/version-increment.sh
       shell: bash
       env:
-        current_version: ${{ steps.version-lookup.outputs.current-version }}
+        current_version: ${{ steps.version-lookup.outputs.CURRENT_VERSION }}
         increment: ${{ inputs.increment }}
         scheme: ${{ inputs.scheme }}

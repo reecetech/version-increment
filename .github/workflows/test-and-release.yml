@@ -51,7 +51,7 @@ jobs:
         id: version-increment
         run: ./version-increment.sh
         env:
-          current_version: ${{ steps.version-lookup.outputs.current-version }}
+          current_version: ${{ steps.version-lookup.outputs.CURRENT_VERSION }}
           scheme: calver
 
       - name: Release version
@@ -61,4 +61,4 @@ jobs:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           draft: false
           prerelease: false
-          automatic_release_tag: "${{ steps.version-increment.outputs.version }}"
+          automatic_release_tag: "${{ steps.version-increment.outputs.VERSION }}"
