@@ -88,6 +88,7 @@ fi
 
 echo "ℹ️ The new version is ${new_version}"
 
+# shellcheck disable=SC2129
 echo "VERSION=${new_version}" >> "${GITHUB_OUTPUT}"
 echo "V_VERSION=v${new_version}" >> "${GITHUB_OUTPUT}"
 echo "MAJOR_VERSION=${version_array[0]}" >> "${GITHUB_OUTPUT}"
