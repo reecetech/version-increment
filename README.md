@@ -9,7 +9,7 @@
         uses: actions/checkout@v2
 
       - name: Get next version
-        uses: reecetech/version-increment@2022.5.1
+        uses: reecetech/version-increment@2022.10.3
         id: version
         with:
           scheme: semver
