@@ -41,7 +41,7 @@ outputs:
   patch-version:
     description: 'Patch number of the incremented version'
     value: ${{ steps.version-increment.outputs.PATCH_VERSION }}
-  pre-release-version:
+  pre-release-label:
     description: 'Pre-release label of the incremented version'
     value: ${{ steps.version-increment.outputs.PRE_RELEASE_LABEL }}
   major-v-version:
