@@ -9,7 +9,7 @@
         uses: actions/checkout@v2
 
       - name: Get next version
-        uses: reecetech/version-increment@2023.3.1
+        uses: reecetech/version-increment@2023.4.1
         id: version
         with:
           scheme: semver
@@ -24,6 +24,7 @@
 ```
 
 ### 🔖 semver
+
 This action will detect the current latest _normal_ semantic version (semver) from the tags in
 a git repository.  It will increment the version as directed (by default: +1 to
 the patch digit).  Both the current latest and the incremented version are
@@ -52,14 +53,16 @@ e.g. `2021.6.2`
 | minor  | month   | `6`     |
 | patch  | release | `2`     | The *n*th release for the month |
 
-If the current latest normal version is not the current year and month, then the year and month digits will be
+If the current latest normal version is not the current year and month, then the
+year and month digits will be
 set to the current year and month, and the release digit will be reset to 1.
 
 ### 🎋 Default branch vs. any other branch
 
 **Default branch**
 
-The action will return a _normal_ version if it is detected that the current commit is on the default branch (usually `main`).
+The action will return a _normal_ version if it is detected that the current commit
+is on the default branch (usually `main`).
 
 Examples:
 * `1.2.7`
@@ -67,7 +70,10 @@ Examples:
 
 **Any other branch**
 
-The action will return a _pre-release_ version if any other branch is detected (e.g. `new-feature`, `bugfix/foo`, etc).  The _pre-release_ portion of the version number will be the literal string `pre.` followed by the git commit ID short reference SHA (trimmed of any leading zeros).
+The action will return a _pre-release_ version if any other branch is detected
+(e.g. `new-feature`, `bugfix/foo`, etc).  The _pre-release_ portion of the version number
+will be the literal string `pre.` followed by the git commit ID short reference SHA
+(trimmed of any leading zeros).
 
 Examples:
 * `1.2.7-pre.41218aa78`
@@ -78,6 +84,7 @@ Examples:
 | name      | description                                               | required | default  |
 | :---      | :---                                                      | :---     | :---     |
 | scheme    | The versioning scheme in-use, either `semver` or `calver` | No       | `semver` |
+| pep440    | Set to `true` for PEP440 compatibility of _pre-release_ versions by making use of the build metadata segment of semver, which maps to local version identifier in PEP440 | No | `false` |
 | increment | The digit to increment, either `major`, `minor` or `patch`, ignored if `scheme` == `calver` | No | `patch` |
 
 ### 📤 Outputs
