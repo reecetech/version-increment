@@ -16,8 +16,8 @@ pcre_old_calver='^(?P<major>0|[1-9]\d*)-0{0,1}(?P<minor>0|[0-9]\d*)-R(?P<patch>0
 
 input_errors='false'
 scheme="${scheme:-semver}"
-if [[ "${scheme}" != 'semver' && "${scheme}" != 'calver' ]] ; then
-    echo "🛑 Value of 'scheme' is not valid, choose from 'semver' or 'calver'" 1>&2
+if [[ "${scheme}" != 'semver' && "${scheme}" != 'calver' && "${scheme}" != 'pep440' ]] ; then
+    echo "🛑 Value of 'scheme' is not valid, choose from 'semver', 'calver', or 'pep440'" 1>&2
     input_errors='true'
 fi
 

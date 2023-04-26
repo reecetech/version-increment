@@ -120,6 +120,23 @@ function init_repo {
     [[ "$output" = *"VERSION=2.0.0"* ]]
 }
 
+@test "increments the major digit correctly (pep440)" {
+    init_repo
+
+    export current_version=1.2.3
+    export scheme="pep440"
+    export increment="major"
+
+    run ../../version-increment.sh
+
+    print_run_info
+    [ "$status" -eq 0 ] &&
+    [[ "$output" = *"MAJOR_VERSION=2"* ]] &&
+    [[ "$output" = *"MINOR_VERSION=0"* ]] &&
+    [[ "$output" = *"PATCH_VERSION=0"* ]] &&
+    [[ "$output" = *"VERSION=2.0.0"* ]]
+}
+
 @test "prefixes with v" {
     init_repo
 
@@ -176,4 +193,20 @@ function init_repo {
     [ "$status" -eq 0 ] &&
     [[ "$output" = *"PRE_RELEASE_LABEL=pre.${short_ref}"* ]]
     [[ "$output" = *"VERSION=1.2.4-pre.${short_ref}"* ]]
+}
+
+@test "appends prerelease information in pep440 compatible way if on a branch and scheme is pep440" {
+    init_repo
+
+    export current_version=10.20.30
+    export scheme="pep440"
+    export GITHUB_REF="refs/heads/super-awesome-python"
+    export short_ref="$(git rev-parse --short HEAD | sed 's/0*//')"
+
+    run ../../version-increment.sh
+
+    print_run_info
+    [ "$status" -eq 0 ] &&
+    [[ "$output" = *"PRE_RELEASE_LABEL=pre.${short_ref}"* ]]
+    [[ "$output" = *"VERSION=10.20.31+pre.${short_ref}"* ]]
 }
