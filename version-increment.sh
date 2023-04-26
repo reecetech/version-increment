@@ -75,7 +75,7 @@ fi
 # add pre-release info to version if not the default branch
 if [[ "${current_ref}" != "refs/heads/${default_branch}" ]] ; then
     pre_release="pre.${git_commit}"
-    if [[ "${scheme}" == 'pep440' ]] ; then
+    if [[ "${pep440:-}" == 'true' ]] ; then
         new_version="${new_version}+${pre_release}"
     else
         new_version="${new_version}-${pre_release}"

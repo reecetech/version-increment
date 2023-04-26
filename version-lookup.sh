@@ -53,9 +53,6 @@ if [[ -z "${current_version:-}" ]] ; then
         semver)
             current_version="0.0.0"
         ;;
-        pep440)
-            current_version="0.0.0"
-        ;;
         calver)
             current_version="$(date '+%Y.%-m.0')"
         ;;
