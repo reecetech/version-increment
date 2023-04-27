@@ -220,11 +220,11 @@ function init_repo {
 
     print_run_info
     [ "$status" -eq 0 ] &&
-    [[ "$output" = *"PRE_RELEASE_LABEL=pre.${short_ref}"* ]]
+    [[ "$output" = *"PRE_RELEASE_LABEL=pre.${short_ref}"* ]] &&
     [[ "$output" = *"VERSION=1.2.4-pre.${short_ref}"* ]]
 }
 
-@test "appends prerelease information in pep440 compatible way if on a branch and scheme is pep440" {
+@test "appends prerelease information in pep440 compatible way when pep440 is true" {
     init_repo
 
     export current_version=10.20.30
@@ -236,6 +236,23 @@ function init_repo {
 
     print_run_info
     [ "$status" -eq 0 ] &&
-    [[ "$output" = *"PRE_RELEASE_LABEL=pre.${short_ref}"* ]]
+    [[ "$output" = *"PRE_RELEASE_LABEL=pre.${short_ref}"* ]] &&
     [[ "$output" = *"VERSION=10.20.31+pre.${short_ref}"* ]]
+}
+
+@test "appends prerelease information in pep440 compatible way when pep440 is true, and using calver scheme" {
+    init_repo
+
+    export current_version=2020.6.4
+    export scheme="calver"
+    export pep440="true"
+    export GITHUB_REF="refs/heads/super-awesome-python"
+    export short_ref="$(git rev-parse --short HEAD | sed 's/0*//')"
+
+    run ../../version-increment.sh
+
+    print_run_info
+    [ "$status" -eq 0 ] &&
+    [[ "$output" = *"PRE_RELEASE_LABEL=pre.${short_ref}"* ]] &&
+    [[ "$output" = *"VERSION=$(date +%Y.%-m.1)+pre.${short_ref}"* ]]
 }
