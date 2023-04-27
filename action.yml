@@ -11,6 +11,10 @@ inputs:
     description: 'Versioning scheme - semver, or, calver (defaults to semver)'
     required: false
     default: 'semver'
+  pep440:
+    description: 'PEP440 compatibility mode - shifts the pre-release version information into build metadata instead'
+    required: false
+    default: false
   increment:
     description: |
       Field to increment - major, minor, or, patch (defaults to patch)
@@ -69,4 +73,5 @@ runs:
       env:
         current_version: ${{ steps.version-lookup.outputs.CURRENT_VERSION }}
         increment: ${{ inputs.increment }}
+        pep440: ${{ inputs.pep440 }}
         scheme: ${{ inputs.scheme }}

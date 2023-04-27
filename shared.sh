@@ -21,6 +21,12 @@ if [[ "${scheme}" != 'semver' && "${scheme}" != 'calver' ]] ; then
     input_errors='true'
 fi
 
+pep440="${pep440:-false}"
+if [[ "${pep440}" != 'false' && "${pep440}" != 'true' ]] ; then
+    echo "🛑 Value of 'pep440' is not valid, choose from 'false' or 'true'" 1>&2
+    input_errors='true'
+fi
+
 ##==----------------------------------------------------------------------------
 ##  MacOS compatibility - for local testing
 

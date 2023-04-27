@@ -53,6 +53,18 @@ function init_repo {
     [[ "$output" = *"Value of 'scheme' is not valid"* ]]
 }
 
+@test "fails if invalid value for pep440 given" {
+    init_repo
+
+    export pep440="yes"
+
+    run ../../version-increment.sh
+
+    print_run_info
+    [ "$status" -eq 8 ] &&
+    [[ "$output" = *"Value of 'pep440' is not valid"* ]]
+}
+
 @test "fails if invalid increment given" {
     init_repo
 
@@ -104,10 +116,44 @@ function init_repo {
     [[ "$output" = *"VERSION=1.3.0"* ]]
 }
 
+@test "increments the minor digit correctly (explicitly not pep440)" {
+    init_repo
+
+    export current_version=1.2.3
+    export pep404="false"
+    export increment="minor"
+
+    run ../../version-increment.sh
+
+    print_run_info
+    [ "$status" -eq 0 ] &&
+    [[ "$output" = *"MAJOR_VERSION=1"* ]] &&
+    [[ "$output" = *"MINOR_VERSION=3"* ]] &&
+    [[ "$output" = *"PATCH_VERSION=0"* ]] &&
+    [[ "$output" = *"VERSION=1.3.0"* ]]
+}
+
 @test "increments the major digit correctly (semver)" {
     init_repo
 
     export current_version=1.2.3
+    export increment="major"
+
+    run ../../version-increment.sh
+
+    print_run_info
+    [ "$status" -eq 0 ] &&
+    [[ "$output" = *"MAJOR_VERSION=2"* ]] &&
+    [[ "$output" = *"MINOR_VERSION=0"* ]] &&
+    [[ "$output" = *"PATCH_VERSION=0"* ]] &&
+    [[ "$output" = *"VERSION=2.0.0"* ]]
+}
+
+@test "increments the major digit correctly (pep440 mode)" {
+    init_repo
+
+    export current_version=1.2.3
+    export pep404="true"
     export increment="major"
 
     run ../../version-increment.sh
@@ -174,6 +220,39 @@ function init_repo {
 
     print_run_info
     [ "$status" -eq 0 ] &&
-    [[ "$output" = *"PRE_RELEASE_LABEL=pre.${short_ref}"* ]]
+    [[ "$output" = *"PRE_RELEASE_LABEL=pre.${short_ref}"* ]] &&
     [[ "$output" = *"VERSION=1.2.4-pre.${short_ref}"* ]]
+}
+
+@test "appends prerelease information in pep440 compatible way when pep440 is true" {
+    init_repo
+
+    export current_version=10.20.30
+    export pep440="true"
+    export GITHUB_REF="refs/heads/super-awesome-python"
+    export short_ref="$(git rev-parse --short HEAD | sed 's/0*//')"
+
+    run ../../version-increment.sh
+
+    print_run_info
+    [ "$status" -eq 0 ] &&
+    [[ "$output" = *"PRE_RELEASE_LABEL=pre.${short_ref}"* ]] &&
+    [[ "$output" = *"VERSION=10.20.31+pre.${short_ref}"* ]]
+}
+
+@test "appends prerelease information in pep440 compatible way when pep440 is true, and using calver scheme" {
+    init_repo
+
+    export current_version=2020.6.4
+    export scheme="calver"
+    export pep440="true"
+    export GITHUB_REF="refs/heads/super-awesome-python"
+    export short_ref="$(git rev-parse --short HEAD | sed 's/0*//')"
+
+    run ../../version-increment.sh
+
+    print_run_info
+    [ "$status" -eq 0 ] &&
+    [[ "$output" = *"PRE_RELEASE_LABEL=pre.${short_ref}"* ]] &&
+    [[ "$output" = *"VERSION=$(date +%Y.%-m.1)+pre.${short_ref}"* ]]
 }
