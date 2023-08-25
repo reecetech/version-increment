@@ -22,6 +22,10 @@ inputs:
       Not applicable to `calver` scheme
     required: false
     default: 'patch'
+  release_branch:
+    description: "Specify a non-main branch to use for the release tag (the one without -prerelease). If empty, will use the default branch for the repo."
+    required:
+    type: string
 
 outputs:
   current-version:
@@ -75,3 +79,4 @@ runs:
         increment: ${{ inputs.increment }}
         pep440: ${{ inputs.pep440 }}
         scheme: ${{ inputs.scheme }}
+        release_branch: ${{ inputs.release_branch }}
