@@ -1,6 +1,3 @@
-Forked from https://github.com/reecetech/version-increment. Likely only here until additional changes made in this fork are accepted back in the main repository.
-
-
 # ➕ Version Increment
 
 ## 📄 Use
