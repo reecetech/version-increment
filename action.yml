@@ -1,5 +1,5 @@
 ---
-name: 'Version Increment'
+name: 'Version Increment (Octo)'
 description: Inspects the git tags to determine the current normal version, and returns the next version number
 
 branding:
