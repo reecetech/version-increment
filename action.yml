@@ -24,7 +24,7 @@ inputs:
     default: 'patch'
   release_branch:
     description: "Specify a non-main branch to use for the release tag (the one without -prerelease). If empty, will use the default branch for the repo."
-    required:
+    required: false
     type: string
 
 outputs:
