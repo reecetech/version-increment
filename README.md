@@ -81,11 +81,12 @@ Examples:
 
 ### 📥 Inputs
 
-| name      | description                                               | required | default  |
-| :---      | :---                                                      | :---     | :---     |
-| scheme    | The versioning scheme in-use, either `semver` or `calver` | No       | `semver` |
-| pep440    | Set to `true` for PEP440 compatibility of _pre-release_ versions by making use of the build metadata segment of semver, which maps to local version identifier in PEP440 | No | `false` |
-| increment | The digit to increment, either `major`, `minor` or `patch`, ignored if `scheme` == `calver` | No | `patch` |
+| name           | description                                                                                 | required | default  |
+| :---           | :---                                                                                        | :---     | :---     |
+| scheme         | The versioning scheme in-use, either `semver` or `calver`                                   | No       | `semver` |
+| pep440         | Set to `true` for PEP440 compatibility of _pre-release_ versions by making use of the build metadata segment of semver, which maps to local version identifier in PEP440 | No       | `false`  |
+| increment      | The digit to increment, either `major`, `minor` or `patch`, ignored if `scheme` == `calver` | No       | `patch`  |
+| release_branch | Specify a non-default branch to use for the release tag (the one without -pre)              | No       |          |
 
 ### 📤 Outputs
 
