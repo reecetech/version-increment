@@ -33,7 +33,7 @@ if [[ -z "${BATS_VERSION:-}" ]] ; then
     default_branch="$(git remote show origin | ${grep} 'HEAD branch' | cut -d ' ' -f 5)"
 fi
 # use release_branch if not empty
-if [[ -n "${release_branch}" ]] ; then
+if [[ -n "${release_branch:-}" ]] ; then
     default_branch="${release_branch}" 
 fi
 
