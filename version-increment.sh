@@ -32,6 +32,11 @@ default_branch='main'
 if [[ -z "${BATS_VERSION:-}" ]] ; then
     default_branch="$(git remote show origin | ${grep} 'HEAD branch' | cut -d ' ' -f 5)"
 fi
+# use release_branch if not empty
+if [[ -n "${release_branch}" ]] ; then
+    default_branch="${release_branch}" 
+fi
+
 current_ref="${GITHUB_REF:-}"
 git_commit="$(git rev-parse --short HEAD | sed 's/0*//')"  # trim leading zeros, because semver doesn't allow that in
                                                            # the 'pre-release version' part, but we can't use the + char
