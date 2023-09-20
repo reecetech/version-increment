@@ -55,10 +55,9 @@ jobs:
           scheme: calver
 
       - name: Release version
-        uses: marvinpinto/action-automatic-releases@919008cf3f741b179569b7a6fb4d8860689ab7f0  # v1.2.1
+        uses: softprops/action-gh-release@v1
         if: ${{ github.ref_name == github.event.repository.default_branch }}
         with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
           draft: false
           prerelease: false
-          automatic_release_tag: "${{ steps.version-increment.outputs.VERSION }}"
+          tag_name: "${{ steps.version-increment.outputs.VERSION }}"
