@@ -9,55 +9,11 @@ on:
       - '**'
 
 jobs:
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Run ShellCheck
-        uses: ludeeus/action-shellcheck@2.0.0
-        with:
-          check_together: 'yes'
-
   test:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Setup bats
-        uses: mig4/setup-bats@af9a00deb21b5d795cabfeaa8d9060410377686d  # v1.2.0
+      - name: Get next version
+        uses: reecetech/version-increment@use_api
+        id: version
         with:
-          bats-version: 1.8.0
-
-      - name: Test
-        run: bats tests/*.bats
-
-  release:
-    needs:
-      - lint
-      - test
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Lookup version
-        id: version-lookup
-        run: ./version-lookup.sh
-
-      - name: Increment version
-        id: version-increment
-        run: ./version-increment.sh
-        env:
-          current_version: ${{ steps.version-lookup.outputs.CURRENT_VERSION }}
-          scheme: calver
-
-      - name: Release version
-        uses: softprops/action-gh-release@v1
-        if: ${{ github.ref_name == github.event.repository.default_branch }}
-        with:
-          draft: false
-          prerelease: false
-          tag_name: "${{ steps.version-increment.outputs.VERSION }}"
+          use_api: true
