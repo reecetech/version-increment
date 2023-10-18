@@ -25,16 +25,33 @@ fi
 ##==----------------------------------------------------------------------------
 ##  Get tags from GitHub repo
 
-# Skip if testing, otherwise pull tags
+# Skip if testing, or if use_api is true, otherwise pull tags
 if [[ -z "${BATS_VERSION:-}" ]] ; then
-    git fetch --quiet --force origin 'refs/tags/*:refs/tags/*'
+    if [[ "${use_api:-}" != 'true' ]] ; then
+        git fetch --quiet --force origin 'refs/tags/*:refs/tags/*'
+    fi
 fi
 
 ##==----------------------------------------------------------------------------
 ##  Version parsing
 
 # detect current version - removing "v" from start of tag if it exists
-current_version="$(git tag -l | { ${grep} -P "${pcre_allow_vprefix}" || true; } | sed 's/^v//g' | sort -V | tail -n 1)"
+if [[ "${use_api:-}" == 'true' ]] ; then
+    current_version="$(
+        curl -fsSL \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${github_token}" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/git/matching-refs/tags/" \
+        | jq -r '.[].ref' | sed 's|refs/tags/||g' \
+        | { ${grep} -P "${pcre_allow_vprefix}" || true; } | sed 's/^v//g' | sort -V | tail -n 1
+    )"
+else
+    current_version="$(
+        git tag -l \
+        | { ${grep} -P "${pcre_allow_vprefix}" || true; } | sed 's/^v//g' | sort -V | tail -n 1
+    )"
+fi
 
 # support transition from an old reecetech calver style (yyyy-mm-Rr, where R is the literal `R`, and r is the nth release for the month)
 if [[ -z "${current_version:-}" ]] ; then

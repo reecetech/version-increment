@@ -28,20 +28,34 @@ fi
 ##  Git info - branch names, commit short ref
 
 default_branch='main'
-# if we're _not_ testing, then _actually_ check the origin
-if [[ -z "${BATS_VERSION:-}" ]] ; then
-    default_branch="$(git remote show origin | ${grep} 'HEAD branch' | cut -d ' ' -f 5)"
-fi
 # use release_branch if not empty
 if [[ -n "${release_branch:-}" ]] ; then
     default_branch="${release_branch}" 
+elif [[ -z "${BATS_VERSION:-}" ]] ; then
+    # if we're _not_ testing, then _actually_ check the origin
+    if [[ "${use_api:-}" == 'true' ]] ; then
+        default_branch="$(
+            curl -fsSL \
+                -H "Accept: application/vnd.github+json" \
+                -H "Authorization: Bearer ${github_token}" \
+                -H "X-GitHub-Api-Version: 2022-11-28" \
+                "${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}" \
+            | jq -r '.default_branch'
+        )"
+    else
+        default_branch="$(git remote show origin | ${grep} 'HEAD branch' | cut -d ' ' -f 5)"
+    fi
 fi
 
 current_ref="${GITHUB_REF:-}"
-git_commit="$(git rev-parse --short HEAD | sed 's/0*//')"  # trim leading zeros, because semver doesn't allow that in
-                                                           # the 'pre-release version' part, but we can't use the + char
-                                                           # to make it 'build metadata' as that's not supported in K8s
-                                                           # labels
+
+if [[ "${use_api:-}" == 'true' ]] ; then
+    # because we cannot use `rev-parse` with the API, we'll take a punt that 9 characters is enough for uniqueness
+    # shellcheck disable=SC2001
+    git_commit="$(echo "${GITHUB_SHA:0:9}" | sed 's/0*//')"    # Also, trim leading zeros, because semver doesn't allow that in
+else                                                           # the 'pre-release version' part, but we can't use the + char
+    git_commit="$(git rev-parse --short HEAD | sed 's/0*//')"  # to make it 'build metadata' as that's not supported in K8s
+fi                                                             # labels
 
 ##==----------------------------------------------------------------------------
 ##  Version increment
