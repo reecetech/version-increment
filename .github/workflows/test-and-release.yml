@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Run ShellCheck
         uses: ludeeus/action-shellcheck@2.0.0
@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup bats
         uses: mig4/setup-bats@af9a00deb21b5d795cabfeaa8d9060410377686d  # v1.2.0
@@ -34,14 +34,48 @@ jobs:
       - name: Test
         run: bats tests/*.bats
 
+  test-api:
+    runs-on: ubuntu-latest
+    env:
+      github_token: ${{ github.token }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Remove .git directory
+        run: rm -rf .git/
+
+      - name: Test lookup version (with API)
+        id: version-lookup
+        env:
+          use_api: 'true'
+        run: ./version-lookup.sh
+
+      - name: Check lookup result
+        shell: bash
+        run: '[[ -n "${{ steps.version-lookup.outputs.CURRENT_VERSION }}" ]]'
+
+      - name: Test increment version (with API)
+        id: version-increment
+        run: ./version-increment.sh
+        env:
+          current_version: ${{ steps.version-lookup.outputs.CURRENT_VERSION }}
+          scheme: calver
+          use_api: 'true'
+
+      - name: Check increment result
+        shell: bash
+        run: '[[ "$(date +%Y.%m)" == "$(echo "${{ steps.version-increment.outputs.VERSION }}" | cut -d "." -f 1-2)" ]]'
+
   release:
     needs:
       - lint
       - test
+      - test-api
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Lookup version
         id: version-lookup
