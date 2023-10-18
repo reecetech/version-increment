@@ -16,4 +16,5 @@ jobs:
         uses: reecetech/version-increment@use_api
         id: version
         with:
+          scheme: calver
           use_api: true
