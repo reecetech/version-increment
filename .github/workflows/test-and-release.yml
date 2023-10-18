@@ -34,15 +34,15 @@ jobs:
       - name: Test
         run: bats tests/*.bats
 
-  test-api:
+  test-api-mode:  # requires github API, didn't want to mock it
     runs-on: ubuntu-latest
     env:
       github_token: ${{ github.token }}
     steps:
-      - name: Checkout code
+      - name: Checkout code  # have to checkout to have the source code available
         uses: actions/checkout@v4
 
-      - name: Remove .git directory
+      - name: Remove .git directory  # remove the git directory to make the testing valid
         run: rm -rf .git/
 
       - name: Test lookup version (with API)
@@ -67,11 +67,48 @@ jobs:
         shell: bash
         run: '[[ "$(date +%Y.%m)" == "$(echo "${{ steps.version-increment.outputs.VERSION }}" | cut -d "." -f 1-2)" ]]'
 
-  release:
+  test-action-yml:  # integration testing
     needs:
       - lint
       - test
-      - test-api
+      - test-api-mode
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code  # have to checkout to have the source code available
+        uses: actions/checkout@v4
+
+      - name: Remove .git directory  # remove the git directory to make the testing valid
+        run: rm -rf .git/
+
+      - name: Get next version via API
+        uses: ./
+        id: version-via-api
+        with:
+          scheme: 'calver'
+          use_api: true
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Get next version via Git
+        uses: ./
+        id: version-via-git
+        with:
+          scheme: 'calver'
+          use_api: false
+
+      - name: Check results agree
+        shell: bash
+        run: |
+          [[ "${{ steps.version-via-api.outputs.current-version }}" == "${{ steps.version-via-git.outputs.current-version }}" ]]
+          [[ "${{ steps.version-via-api.outputs.major-version }}" == "${{ steps.version-via-git.outputs.major-version }}" ]]
+          [[ "${{ steps.version-via-api.outputs.minor-version }}" == "${{ steps.version-via-git.outputs.minor-version }}" ]]
+          [[ "${{ steps.version-via-api.outputs.patch-version }}" == "${{ steps.version-via-git.outputs.patch-version }}" ]]
+          # Don't test the full version or pre-version, since the number of digits is likely to be different (9 via api vs. 7 via git)
+
+  release:
+    needs:
+      - test-action-yml
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
