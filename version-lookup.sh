@@ -11,18 +11,6 @@ if [[ "${input_errors}" == 'true' ]] ; then
 fi
 
 ##==----------------------------------------------------------------------------
-##  MacOS compatibility - for local testing
-
-export grep="grep"
-if [[ "$(uname)" == "Darwin" ]] ; then
-    export grep="ggrep"
-    if ! grep --version 1>/dev/null ; then
-        echo "🛑 GNU grep not installed, try brew install coreutils" 1>&2
-        exit 9
-    fi
-fi
-
-##==----------------------------------------------------------------------------
 ##  Get tags from GitHub repo
 
 # Skip if testing, or if use_api is true, otherwise pull tags
