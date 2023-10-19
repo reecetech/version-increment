@@ -1,12 +1,12 @@
-# ➕ Version Increment
+# Version Increment ➕
 
-## 📄 Use
+## Use 📄
 
-### ⌨️ Example
+### Example ⌨️
 
 ```yaml
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Get next version
         uses: reecetech/version-increment@2023.9.3
@@ -23,7 +23,20 @@
           context: .
 ```
 
-### 🔖 semver
+#### API mode 🔗
+
+Maybe you don't want to checkout your code in the job that calculates the version number.  That's okay, you can
+use the API mode:
+
+```yaml
+      - name: Get next version
+        uses: reecetech/version-increment@2023.10.1
+        id: version
+        with:
+          use_api: true
+```
+
+### semver 🔖
 
 This action will detect the current latest _normal_ semantic version (semver) from the tags in
 a git repository.  It will increment the version as directed (by default: +1 to
@@ -37,7 +50,7 @@ e.g. `1.2.7`
 
 See: https://semver.org/spec/v2.0.0.html
 
-### 📅 calver (semver compliant)
+### calver (semver compliant) 📅
 
 Optionally, this action can provide semver compliant calendar versions (calver).
 In this calver scheme, the semver  major, minor and patch digits map to year,
@@ -57,7 +70,7 @@ If the current latest normal version is not the current year and month, then the
 year and month digits will be
 set to the current year and month, and the release digit will be reset to 1.
 
-### 🎋 Default branch vs. any other branch
+### Default branch vs. any other branch 🎋
 
 **Default branch**
 
@@ -67,6 +80,17 @@ is on the default branch (usually `main`).
 Examples:
 * `1.2.7`
 * `2021.6.2`
+
+You may override the branch to consider the release branch if it is not the default branch, by providing a specific
+release branch name as an input.  For example:
+
+```yaml
+      - name: Get next version
+        uses: reecetech/version-increment@2023.10.1
+        id: version
+        with:
+          release_branch: publish
+```
 
 **Any other branch**
 
@@ -79,7 +103,7 @@ Examples:
 * `1.2.7-pre.41218aa78`
 * `2021.6.2-pre.32fd19841`
 
-### 📥 Inputs
+### Inputs 📥
 
 | name           | description                                                                                 | required | default  |
 | :---           | :---                                                                                        | :---     | :---     |
@@ -87,8 +111,9 @@ Examples:
 | pep440         | Set to `true` for PEP440 compatibility of _pre-release_ versions by making use of the build metadata segment of semver, which maps to local version identifier in PEP440 | No       | `false`  |
 | increment      | The digit to increment, either `major`, `minor` or `patch`, ignored if `scheme` == `calver` | No       | `patch`  |
 | release_branch | Specify a non-default branch to use for the release tag (the one without -pre)              | No       |          |
+| use_api        | Use the GitHub API to discover current tags, which avoids the need for a git checkout, but requires `curl` and `jq` | No       | `false`  |
 
-### 📤 Outputs
+### Outputs 📤
 
 | name              | description                                                                                       |
 | :---              | :---                                                                                              |
@@ -104,7 +129,7 @@ Examples:
 | minor-v-version   | Minor number of the incremented version, prefixed with a `v` character                            |
 | patch-v-version   | Patch number of the incremented version, prefixed with a `v` character                            |
 
-## 💕 Contributing
+## Contributing 💕
 
 Please raise a pull request, but note the testing tools below
 

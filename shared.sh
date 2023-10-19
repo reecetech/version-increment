@@ -27,6 +27,20 @@ if [[ "${pep440}" != 'false' && "${pep440}" != 'true' ]] ; then
     input_errors='true'
 fi
 
+use_api="${use_api:-false}"
+if [[ "${use_api}" != 'false' && "${use_api}" != 'true' ]] ; then
+    echo "🛑 Value of 'use_api' is not valid, choose from 'false' or 'true'" 1>&2
+    input_errors='true'
+fi
+
+if [[ "${use_api}" == 'true' ]] ; then
+    if [[ -z "${github_token:-}" ]] ; then
+        echo "🛑 'use_api' is true, but environment variable 'github_token' is not set" 1>&2
+        input_errors='true'
+    fi
+fi
+
+
 ##==----------------------------------------------------------------------------
 ##  MacOS compatibility - for local testing
 

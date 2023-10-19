@@ -26,6 +26,10 @@ inputs:
     description: 'Specify a non-default branch to use for the release tag (the one without -pre)'
     required: false
     type: string
+  use_api:
+    description: 'Use the GitHub API to discover current tags, which avoids the need for a git checkout, but requires `curl` and `jq`'
+    required: false
+    default: false
 
 outputs:
   current-version:
@@ -69,7 +73,9 @@ runs:
       run: ${{ github.action_path }}/version-lookup.sh
       shell: bash
       env:
+        github_token: ${{ github.token }}
         scheme: ${{ inputs.scheme }}
+        use_api: ${{ inputs.use_api }}
 
     - id: version-increment
       run: ${{ github.action_path }}/version-increment.sh
@@ -77,6 +83,8 @@ runs:
       env:
         current_version: ${{ steps.version-lookup.outputs.CURRENT_VERSION }}
         increment: ${{ inputs.increment }}
+        github_token: ${{ github.token }}
         pep440: ${{ inputs.pep440 }}
         scheme: ${{ inputs.scheme }}
         release_branch: ${{ inputs.release_branch }}
+        use_api: ${{ inputs.use_api }}
