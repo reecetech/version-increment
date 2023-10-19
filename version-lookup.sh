@@ -41,15 +41,6 @@ else
     )"
 fi
 
-# support transition from an old reecetech calver style (yyyy-mm-Rr, where R is the literal `R`, and r is the nth release for the month)
-if [[ -z "${current_version:-}" ]] ; then
-    current_version="$(git tag -l | { ${grep} -P "${pcre_old_calver}" || true; } | sort -V | tail -n 1)"
-    if [[ -n "${current_version:-}" ]] ; then
-        # convert - to . and drop leading zeros & the R
-        current_version="$(echo "${current_version}" | sed -r 's/^([0-9]+)-0{0,1}([0-9]+)-R0{0,1}([0-9]+)$/\1.\2.\3/')"
-    fi
-fi
-
 # handle no version detected - start versioning!
 if [[ -z "${current_version:-}" ]] ; then
     echo "⚠️ No previous release version identified in git tags"

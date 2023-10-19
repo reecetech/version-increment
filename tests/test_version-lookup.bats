@@ -110,18 +110,6 @@ function init_repo {
     [[ "$output" = *"CURRENT_VERSION=$(date '+%Y.%-m.0')"* ]]
 }
 
-@test "converts from older calver scheme automatically" {
-    init_repo
-
-    git tag 2020-09-R2
-
-    run ../../version-lookup.sh
-
-    print_run_info
-    [ "$status" -eq 0 ] &&
-    [[ "$output" = *"CURRENT_VERSION=2020.9.2"* ]]
-}
-
 @test "strips v from the version" {
     init_repo
 
