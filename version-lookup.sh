@@ -11,18 +11,6 @@ if [[ "${input_errors}" == 'true' ]] ; then
 fi
 
 ##==----------------------------------------------------------------------------
-##  MacOS compatibility - for local testing
-
-export grep="grep"
-if [[ "$(uname)" == "Darwin" ]] ; then
-    export grep="ggrep"
-    if ! grep --version 1>/dev/null ; then
-        echo "🛑 GNU grep not installed, try brew install coreutils" 1>&2
-        exit 9
-    fi
-fi
-
-##==----------------------------------------------------------------------------
 ##  Get tags from GitHub repo
 
 # Skip if testing, or if use_api is true, otherwise pull tags
@@ -51,15 +39,6 @@ else
         git tag -l \
         | { ${grep} -P "${pcre_allow_vprefix}" || true; } | sed 's/^v//g' | sort -V | tail -n 1
     )"
-fi
-
-# support transition from an old reecetech calver style (yyyy-mm-Rr, where R is the literal `R`, and r is the nth release for the month)
-if [[ -z "${current_version:-}" ]] ; then
-    current_version="$(git tag -l | { ${grep} -P "${pcre_old_calver}" || true; } | sort -V | tail -n 1)"
-    if [[ -n "${current_version:-}" ]] ; then
-        # convert - to . and drop leading zeros & the R
-        current_version="$(echo "${current_version}" | sed -r 's/^([0-9]+)-0{0,1}([0-9]+)-R0{0,1}([0-9]+)$/\1.\2.\3/')"
-    fi
 fi
 
 # handle no version detected - start versioning!
