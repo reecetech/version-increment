@@ -68,13 +68,13 @@ fi
 
 function grep_p() {
     if [[ "${use_perl}" == 'true' ]] ; then
-        perl -ne "print if /${1}/"
+        LC_ALL=C perl -ne "print if /${1}/"
     elif [[ "${use_gnugrep}" == 'true' ]] ; then
         # shellcheck disable=SC2086
-        ggrep -P "${1}"
+        LC_ALL=C ggrep -P "${1}"
     else
         # shellcheck disable=SC2086
-        command grep -P "${1}"
+        LC_ALL=C command grep -P "${1}"
     fi
 }
 
