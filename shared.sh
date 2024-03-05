@@ -2,6 +2,9 @@
 # shellcheck disable=SC2034
 set -euo pipefail
 
+# Force UTF-8 for all commands, for Git-Bash on Windows compatibility
+export LC_ALL=C.UTF-8
+
 ##==----------------------------------------------------------------------------
 ##  SemVer regexes
 ##  see: https://semver.org/spec/v2.0.0.html#is-there-a-suggested-regular-expression-regex-to-check-a-semver-string
@@ -68,13 +71,13 @@ fi
 
 function grep_p() {
     if [[ "${use_perl}" == 'true' ]] ; then
-        LC_ALL=C.UTF-8 perl -ne "print if /${1}/"
+        perl -ne "print if /${1}/"
     elif [[ "${use_gnugrep}" == 'true' ]] ; then
         # shellcheck disable=SC2086
-        LC_ALL=C.UTF-8 ggrep -P "${1}"
+        ggrep -P "${1}"
     else
         # shellcheck disable=SC2086
-        LC_ALL=C.UTF-8 command grep -P "${1}"
+        command grep -P "${1}"
     fi
 }
 
