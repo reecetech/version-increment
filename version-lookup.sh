@@ -50,7 +50,7 @@ if [[ -z "${current_version:-}" ]] ; then
             current_version="0.0.0"
         ;;
         calver)
-            current_version="$(date '+%Y.%-m.1')"
+            current_version="$(date '+%Y.%-m.0')"
         ;;
     esac
 fi
