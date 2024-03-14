@@ -1,6 +1,15 @@
 #!/usr/bin/env bats
 # vim: set ft=sh sw=4 :
 
+setup() {
+    # get the containing directory of this file
+    # use $BATS_TEST_FILENAME instead of ${BASH_SOURCE[0]} or $0,
+    # as those will point to the bats executable's location or the preprocessed file respectively
+    DIR="$( cd "$( dirname "$BATS_TEST_FILENAME" )" >/dev/null 2>&1 && pwd )"
+    # make executables in src/ visible to PATH
+    PATH="$DIR/../:$PATH"
+}
+
 load helper_print-info
 
 export repo=".tmp_testing/repo"
@@ -22,7 +31,7 @@ function init_repo {
 @test "fails if no current_version given" {
     init_repo
 
-    run ../../version-increment.sh
+    run version-increment.sh
 
     print_run_info
     [ "$status" -eq 8 ] &&
@@ -34,7 +43,7 @@ function init_repo {
 
     export current_version=1.3.5-prerelease
 
-    run ../../version-increment.sh
+    run version-increment.sh
 
     print_run_info
     [ "$status" -eq 8 ] &&
@@ -46,7 +55,7 @@ function init_repo {
 
     export scheme="foover"
 
-    run ../../version-increment.sh
+    run version-increment.sh
 
     print_run_info
     [ "$status" -eq 8 ] &&
@@ -58,7 +67,7 @@ function init_repo {
 
     export pep440="yes"
 
-    run ../../version-increment.sh
+    run version-increment.sh
 
     print_run_info
     [ "$status" -eq 8 ] &&
@@ -70,7 +79,7 @@ function init_repo {
 
     export increment="critical"
 
-    run ../../version-increment.sh
+    run version-increment.sh
 
     print_run_info
     [ "$status" -eq 8 ] &&
@@ -78,7 +87,7 @@ function init_repo {
 }
 
 @test "no deprecated set-output calls made" {
-    run grep -q "::set-output" version-increment.sh
+    run grep -q "::set-output" ../version-increment.sh
 
     print_run_info
     [ "$status" -eq 1 ]
@@ -90,7 +99,7 @@ function init_repo {
     export current_version=1.2.3
     export increment="patch"
 
-    run ../../version-increment.sh
+    run version-increment.sh
 
     print_run_info
     [ "$status" -eq 0 ] &&
@@ -106,7 +115,7 @@ function init_repo {
     export current_version=1.2.3
     export increment="minor"
 
-    run ../../version-increment.sh
+    run version-increment.sh
 
     print_run_info
     [ "$status" -eq 0 ] &&
@@ -123,7 +132,7 @@ function init_repo {
     export pep404="false"
     export increment="minor"
 
-    run ../../version-increment.sh
+    run version-increment.sh
 
     print_run_info
     [ "$status" -eq 0 ] &&
@@ -139,7 +148,7 @@ function init_repo {
     export current_version=1.2.3
     export increment="major"
 
-    run ../../version-increment.sh
+    run version-increment.sh
 
     print_run_info
     [ "$status" -eq 0 ] &&
@@ -156,7 +165,7 @@ function init_repo {
     export pep404="true"
     export increment="major"
 
-    run ../../version-increment.sh
+    run version-increment.sh
 
     print_run_info
     [ "$status" -eq 0 ] &&
@@ -172,7 +181,7 @@ function init_repo {
     export current_version=1.2.3
     export increment="major"
 
-    run ../../version-increment.sh
+    run version-increment.sh
 
     print_run_info
     [ "$status" -eq 0 ] &&
@@ -189,7 +198,7 @@ function init_repo {
     export current_version=2020.6.4
     export scheme="calver"
 
-    run ../../version-increment.sh
+    run version-increment.sh
 
     print_run_info
     [ "$status" -eq 0 ] &&
@@ -202,7 +211,7 @@ function init_repo {
     export current_version="$(date +%Y.%-m.123)"
     export scheme="calver"
 
-    run ../../version-increment.sh
+    run version-increment.sh
 
     print_run_info
     [ "$status" -eq 0 ] &&
@@ -216,7 +225,7 @@ function init_repo {
     export GITHUB_REF="refs/heads/super-awesome-feature"
     export short_ref="$(git rev-parse --short HEAD | sed 's/0*//')"
 
-    run ../../version-increment.sh
+    run version-increment.sh
 
     print_run_info
     [ "$status" -eq 0 ] &&
@@ -231,7 +240,7 @@ function init_repo {
     export GITHUB_REF="refs/heads/releases"
     export release_branch="releases"
 
-    run ../../version-increment.sh
+    run version-increment.sh
 
     print_run_info
     [ "$status" -eq 0 ] &&
@@ -248,7 +257,7 @@ function init_repo {
     export GITHUB_REF="refs/heads/super-awesome-python"
     export short_ref="$(git rev-parse --short HEAD | sed 's/0*//')"
 
-    run ../../version-increment.sh
+    run version-increment.sh
 
     print_run_info
     [ "$status" -eq 0 ] &&
@@ -265,7 +274,7 @@ function init_repo {
     export GITHUB_REF="refs/heads/super-awesome-python"
     export short_ref="$(git rev-parse --short HEAD | sed 's/0*//')"
 
-    run ../../version-increment.sh
+    run version-increment.sh
 
     print_run_info
     [ "$status" -eq 0 ] &&

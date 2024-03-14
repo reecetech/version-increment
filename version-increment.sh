@@ -12,6 +12,8 @@ if [[ "${increment}" != 'patch' && "${increment}" != 'minor' && "${increment}" !
     input_errors='true'
 fi
 
+echo "ℹ️ INCREMENTER: The current normal version is ${current_version}"
+
 if [[ -z "${current_version:-}" ]] ; then
     echo "🛑 Environment variable 'current_version' is unset or empty" 1>&2
     input_errors='true'
