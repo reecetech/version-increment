@@ -46,7 +46,7 @@ if [[ -z "${current_version:-}" ]] ; then
     echo "⚠️ No previous release version identified in git tags"
     # brand new repo! (probably)
     case "${scheme}" in
-        semver)
+        semver | conventional_commits)
             current_version="0.0.0"
         ;;
         calver)

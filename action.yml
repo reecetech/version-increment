@@ -8,7 +8,14 @@ branding:
 
 inputs:
   scheme:
-    description: 'Versioning scheme - semver, or, calver (defaults to semver)'
+    description: |
+      Versioning scheme - semver, calver or conventional_commits (defaults to semver).
+
+      `conventional_commits` Will parse the last commit message to determine the increment type.
+      Supports the following increment types:
+      - patch (build, chore, ci, docs, fix, perf, refactor, revert, style, test)
+      - minor (feat)
+      - Major (any of the above types with an '!' or 'BREAKING CHANGE:' in commit body)
     required: false
     default: 'semver'
   pep440:
@@ -36,14 +43,14 @@ outputs:
     description: 'Current normal version detected'
     value: ${{ steps.version-lookup.outputs.CURRENT_VERSION }}
   current-v-version:
-    description: 'Current normal version detected, prefixed with a `v` charatcter'
+    description: 'Current normal version detected, prefixed with a `v` character'
     value: ${{ steps.version-lookup.outputs.CURRENT_V_VERSION }}
   version:
     description: 'Incremented version calculated'
     value: ${{ steps.version-increment.outputs.VERSION }}
   v-version:
     description: 'Incremented version calculated, prefixed with a `v` charatcter'
-    value: ${{ steps.version-increment.outputs.V_VERSION }}  
+    value: ${{ steps.version-increment.outputs.V_VERSION }}
   major-version:
     description: 'Major number of the incremented version'
     value: ${{ steps.version-increment.outputs.MAJOR_VERSION }}

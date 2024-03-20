@@ -272,3 +272,131 @@ function init_repo {
     [[ "$output" = *"PRE_RELEASE_LABEL=pre.${short_ref}"* ]] &&
     [[ "$output" = *"VERSION=$(date +%Y.%-m.1)+pre.${short_ref}"* ]]
 }
+
+@test "increments the patch version after a fix commit (conventional commits)" {
+    init_repo
+
+    export current_version=1.2.3
+    export scheme="conventional_commits"
+
+    echo "fix: something" > fix.txt
+    git add fix.txt
+    git commit -m "fix: something"
+
+    run ../../version-increment.sh
+
+    print_run_info
+    [ "$status" -eq 0 ] &&
+    [[ "$output" = *"VERSION=1.2.4"* ]]
+    [[ "$output" != *"No conventional commit found"* ]]
+}
+
+
+@test "increments the patch version after a scoped fix commit (conventional commits)" {
+    init_repo
+
+    export current_version=1.2.3
+    export scheme="conventional_commits"
+
+    echo "fix: something" > fix.txt
+    git add fix.txt
+    git commit -m "fix(api): something"
+
+    run ../../version-increment.sh
+
+    print_run_info
+    [ "$status" -eq 0 ] &&
+    [[ "$output" = *"VERSION=1.2.4"* ]]
+    [[ "$output" != *"No conventional commit found"* ]]
+}
+
+@test "increments the major version after a breaking fix commit (conventional commits)" {
+    init_repo
+
+    export current_version=1.2.3
+    export scheme="conventional_commits"
+
+    echo "fix: breaking something" > fix.txt
+    git add fix.txt
+    git commit -m "fix!: something"
+
+    run ../../version-increment.sh
+
+    print_run_info
+    [ "$status" -eq 0 ] &&
+    [[ "$output" = *"VERSION=2.0.0"* ]]
+    [[ "$output" != *"No conventional commit found"* ]]
+}
+
+@test "increments the minor version after a feat commit (conventional commits)" {
+    init_repo
+
+    export current_version=1.2.3
+    export scheme="conventional_commits"
+
+    echo "new feature" > feat.txt
+    git add feat.txt
+    git commit -m "feat: something"
+
+    run ../../version-increment.sh
+
+    print_run_info
+    [ "$status" -eq 0 ] &&
+    [[ "$output" = *"VERSION=1.3.0"* ]]
+    [[ "$output" != *"No conventional commit found"* ]]
+}
+
+@test "increments the major version after a breaking feat commit (conventional commits)" {
+    init_repo
+
+    export current_version=1.2.3
+    export scheme="conventional_commits"
+
+    echo "breaking new feature" > feat.txt
+    git add feat.txt
+    git commit -m "feat!: something"
+
+    run ../../version-increment.sh
+
+    print_run_info
+    [ "$status" -eq 0 ] &&
+    [[ "$output" = *"VERSION=2.0.0"* ]]
+    [[ "$output" != *"No conventional commit found"* ]]
+}
+
+@test "increments the major version after a breaking change in the commit body (conventional commits)" {
+    init_repo
+
+    export current_version=1.2.3
+    export scheme="conventional_commits"
+
+    echo "breaking new fix" > feat.txt
+    git add feat.txt
+    git commit -m "Fix: something
+    BREAKING CHANGE: really important"
+
+    run ../../version-increment.sh
+
+    print_run_info
+    [ "$status" -eq 0 ] &&
+    [[ "$output" = *"VERSION=2.0.0"* ]]
+    [[ "$output" != *"No conventional commit found"* ]]
+}
+
+@test "increments the patch version by default if no conventional commits found and enabled (conventional commits)" {
+    init_repo
+
+    export current_version=1.2.3
+    export scheme="conventional_commits"
+
+    echo "some new change" > feat.txt
+    git add feat.txt
+    git commit -m "new change"
+
+    run ../../version-increment.sh
+
+    print_run_info
+    [ "$status" -eq 0 ] &&
+    [[ "$output" = *"VERSION=1.2.4"* ]]
+    [[ "$output" = *"No conventional commit found"* ]]
+}
