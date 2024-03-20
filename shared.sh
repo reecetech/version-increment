@@ -12,12 +12,20 @@ pcre_allow_vprefix="^v{0,1}${pcre_master_ver:1}"
 pcre_old_calver='^(?P<major>0|[1-9]\d*)-0{0,1}(?P<minor>0|[0-9]\d*)-R(?P<patch>0|[1-9]\d*)$'
 
 ##==----------------------------------------------------------------------------
+## Conventional commit regexes
+## see: https://www.conventionalcommits.org/en/v1.0.0/
+
+pcre_conventional_commit_patch='^(build|chore|ci|docs|fix|perf|refactor|revert|style|test)(\([a-zA-Z0-9-]+\))?:\s.*'
+pcre_conventional_commit_minor='^(feat)(\([a-zA-Z0-9-]+\))?:\s.*'
+pcre_conventional_commit_breaking='^(build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test)(\([a-zA-Z0-9-]+\))?!:.*|BREAKING CHANGE:'
+
+##==----------------------------------------------------------------------------
 ##  Input validation
 
 input_errors='false'
 scheme="${scheme:-semver}"
-if [[ "${scheme}" != 'semver' && "${scheme}" != 'calver' ]] ; then
-    echo "🛑 Value of 'scheme' is not valid, choose from 'semver' or 'calver'" 1>&2
+if [[ "${scheme}" != 'semver' && "${scheme}" != 'calver' && "${scheme}" != 'conventional_commits' ]] ; then
+    echo "🛑 Value of 'scheme' is not valid, choose from 'semver', 'calver' or 'conventional_commits" 1>&2
     input_errors='true'
 fi
 
@@ -39,7 +47,6 @@ if [[ "${use_api}" == 'true' ]] ; then
         input_errors='true'
     fi
 fi
-
 
 ##==----------------------------------------------------------------------------
 ##  MacOS compatibility - for local testing
