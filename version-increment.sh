@@ -61,7 +61,6 @@ fi
 
 ##==----------------------------------------------------------------------------
 ##  Conventional commits
-# If calver is set, raise a warning
 if [[ "${scheme}" == 'conventional_commits' ]] ; then
     # Get message from given commit
     commit_message=$(git log -1 --pretty=format:%B "${git_commit_sha}")
