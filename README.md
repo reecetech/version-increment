@@ -30,7 +30,7 @@ use the API mode:
 
 ```yaml
       - name: Get next version
-        uses: reecetech/version-increment@2023.10.1
+        uses: reecetech/version-increment@2024.4.1
         id: version
         with:
           use_api: true
