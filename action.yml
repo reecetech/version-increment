@@ -11,11 +11,11 @@ inputs:
     description: |
       Versioning scheme - semver, calver or conventional_commits (defaults to semver).
 
-      `conventional_commits` Will parse the last commit message to determine the increment type.
-      Supports the following increment types:
+      `conventional_commits` Will parse the last commit message (e.g. the merge commit) to
+      determine the increment type, and supports the following increment types by keyword:
       - patch (build, chore, ci, docs, fix, perf, refactor, revert, style, test)
       - minor (feat)
-      - Major (any of the above types with an '!' or 'BREAKING CHANGE:' in commit body)
+      - major (any of the above keywords followed by a '!' character, or 'BREAKING CHANGE:' in commit body)
     required: false
     default: 'semver'
   pep440:
@@ -25,6 +25,9 @@ inputs:
   increment:
     description: |
       Field to increment - major, minor, or, patch (defaults to patch)
+
+      If using the `conventional_commits` scheme, this is the default increment if the parsing of the merge commit fails to
+      find conventional commits information
 
       Not applicable to `calver` scheme
     required: false
