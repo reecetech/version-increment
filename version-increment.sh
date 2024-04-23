@@ -30,7 +30,7 @@ fi
 default_branch='main'
 # use release_branch if not empty
 if [[ -n "${release_branch:-}" ]] ; then
-    default_branch="${release_branch}" 
+    default_branch="${release_branch}"
 elif [[ -z "${BATS_VERSION:-}" ]] ; then
     # if we're _not_ testing, then _actually_ check the origin
     if [[ "${use_api:-}" == 'true' ]] ; then
@@ -48,6 +48,7 @@ elif [[ -z "${BATS_VERSION:-}" ]] ; then
 fi
 
 current_ref="${GITHUB_REF:-}"
+git_commit_sha=${GITHUB_SHA:-}
 
 if [[ "${use_api:-}" == 'true' ]] ; then
     # because we cannot use `rev-parse` with the API, we'll take a punt that 9 characters is enough for uniqueness
@@ -55,7 +56,32 @@ if [[ "${use_api:-}" == 'true' ]] ; then
     git_commit="$(echo "${GITHUB_SHA:0:9}" | sed 's/0*//')"    # Also, trim leading zeros, because semver doesn't allow that in
 else                                                           # the 'pre-release version' part, but we can't use the + char
     git_commit="$(git rev-parse --short HEAD | sed 's/0*//')"  # to make it 'build metadata' as that's not supported in K8s
-fi                                                             # labels
+    git_commit_sha="$(git rev-parse --short HEAD)"             # labels
+fi
+
+##==----------------------------------------------------------------------------
+##  Conventional commits
+if [[ "${scheme}" == 'conventional_commits' ]] ; then
+    # Get message from given commit
+    commit_message=$(git log -1 --pretty=format:%B "${git_commit_sha}")
+
+    # Check commit message header
+    found_match='false'
+    if [[ -n "$(echo "${commit_message}" | ${grep} -P "${pcre_conventional_commit_breaking}")" ]] ; then
+        increment='major'
+        found_match='true'
+    elif [[ -n "$(echo "${commit_message}" | ${grep} -P "${pcre_conventional_commit_minor}")" ]] ; then
+        increment='minor'
+        found_match='true'
+    elif [[ -n "$(echo "${commit_message}" | ${grep} -P "${pcre_conventional_commit_patch}")" ]] ; then
+        increment='patch'
+        found_match='true'
+    fi
+
+    if [[ "${found_match}" == 'false' ]] ; then
+        echo "⚠️ No conventional commit found, defaulting to ${increment} increment" 1>&2
+    fi
+fi
 
 ##==----------------------------------------------------------------------------
 ##  Version increment
