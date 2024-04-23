@@ -70,6 +70,22 @@ If the current latest normal version is not the current year and month, then the
 year and month digits will be
 set to the current year and month, and the release digit will be reset to 1.
 
+### Conventional Commits (semver with smarts) 💡
+
+If you choose the conventional commits scheme, the action will parse the last commit message _(usually the merge commit)_ to determine
+the increment type for a `semver` version.
+
+The following increment types by keyword are supported:
+ - patch: build, chore, ci, docs, fix, perf, refactor, revert, style, test
+ - minor: feat
+ - major: any of the above keywords followed by a '!' character, or 'BREAKING CHANGE:' in commit body
+
+If none of the keywords are detected, then the increment specified by the `increment` input will be used (defaults to patch).
+
+> [!TIP]
+> You might like to _enforce_ conventional commits in the title of your pull requests to ensure that the merge commit has the correct
+> information.  Something like this action might be handy: https://github.com/marketplace/actions/conventional-commit-in-pull-requests
+
 ### Default branch vs. any other branch 🎋
 
 **Default branch**
@@ -107,7 +123,7 @@ Examples:
 
 | name           | description                                                                                 | required | default  |
 | :---           | :---                                                                                        | :---     | :---     |
-| scheme         | The versioning scheme in-use, either `semver` or `calver`                                   | No       | `semver` |
+| scheme         | The versioning scheme in-use, either `semver`, `calver` or `conventional_commits`           | No       | `semver` |
 | pep440         | Set to `true` for PEP440 compatibility of _pre-release_ versions by making use of the build metadata segment of semver, which maps to local version identifier in PEP440 | No       | `false`  |
 | increment      | The digit to increment, either `major`, `minor` or `patch`, ignored if `scheme` == `calver` | No       | `patch`  |
 | release_branch | Specify a non-default branch to use for the release tag (the one without -pre)              | No       |          |
