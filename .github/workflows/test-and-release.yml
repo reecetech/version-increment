@@ -27,7 +27,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup bats
-        uses: mig4/setup-bats@af9a00deb21b5d795cabfeaa8d9060410377686d  # v1.2.0
+        uses: bats-core/bats-action@2.0.0
         with:
           bats-version: 1.8.0
 
