@@ -29,7 +29,7 @@ jobs:
       - name: Setup bats
         uses: bats-core/bats-action@2.0.0
         with:
-          bats-version: 1.8.0
+          bats-version: 1.11.0
 
       - name: Test
         run: bats tests/*.bats
