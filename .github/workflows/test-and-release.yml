@@ -77,7 +77,7 @@ jobs:
         os:
           - macos-latest
           - ubuntu-latest
-          - windows-latest
+          # - windows-latest  -- coming soon, https://github.com/reecetech/version-increment/pull/30
       fail-fast: true
     runs-on: ${{ matrix.os }}
     steps:
