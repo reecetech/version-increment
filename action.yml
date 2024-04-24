@@ -80,7 +80,7 @@ runs:
   using: "composite"
   steps:
     - id: version-lookup
-      run: $GITHUB_ACTION_PATH/version-lookup.sh
+      run: "${GITHUB_ACTION_PATH}/version-lookup.sh"
       shell: bash
       env:
         github_token: ${{ github.token }}
@@ -88,7 +88,7 @@ runs:
         use_api: ${{ inputs.use_api }}
 
     - id: version-increment
-      run: $GITHUB_ACTION_PATH/version-increment.sh
+      run: "${GITHUB_ACTION_PATH}/version-increment.sh"
       shell: bash
       env:
         current_version: ${{ steps.version-lookup.outputs.CURRENT_VERSION }}
