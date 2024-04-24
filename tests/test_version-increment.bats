@@ -87,7 +87,7 @@ function init_repo {
 }
 
 @test "no deprecated set-output calls made" {
-    run grep -q "::set-output" ../version-increment.sh
+    run grep -q "::set-output" version-increment.sh
 
     print_run_info
     [ "$status" -eq 1 ]
