@@ -15,7 +15,7 @@ fi
 if [[ -z "${current_version:-}" ]] ; then
     echo "🛑 Environment variable 'current_version' is unset or empty" 1>&2
     input_errors='true'
-elif [[ -z "$(echo "${current_version}" | ${grep} -P "${pcre_master_ver}")" ]] ; then
+elif [[ -z "$(echo "${current_version}" | grep_p "${pcre_master_ver}")" ]] ; then
     echo "🛑 Environment variable 'current_version' is not a valid normal version (M.m.p)" 1>&2
     input_errors='true'
 fi
@@ -43,7 +43,7 @@ elif [[ -z "${BATS_VERSION:-}" ]] ; then
             | jq -r '.default_branch'
         )"
     else
-        default_branch="$(git remote show origin | ${grep} 'HEAD branch' | cut -d ' ' -f 5)"
+        default_branch="$(git remote show origin | grep 'HEAD branch' | cut -d ' ' -f 5)"
     fi
 fi
 
@@ -67,13 +67,13 @@ if [[ "${scheme}" == 'conventional_commits' ]] ; then
 
     # Check commit message header
     found_match='false'
-    if [[ -n "$(echo "${commit_message}" | ${grep} -P "${pcre_conventional_commit_breaking}")" ]] ; then
+    if [[ -n "$(echo "${commit_message}" | grep_p "${pcre_conventional_commit_breaking}")" ]] ; then
         increment='major'
         found_match='true'
-    elif [[ -n "$(echo "${commit_message}" | ${grep} -P "${pcre_conventional_commit_minor}")" ]] ; then
+    elif [[ -n "$(echo "${commit_message}" | grep_p "${pcre_conventional_commit_minor}")" ]] ; then
         increment='minor'
         found_match='true'
-    elif [[ -n "$(echo "${commit_message}" | ${grep} -P "${pcre_conventional_commit_patch}")" ]] ; then
+    elif [[ -n "$(echo "${commit_message}" | grep_p "${pcre_conventional_commit_patch}")" ]] ; then
         increment='patch'
         found_match='true'
     fi
@@ -128,7 +128,7 @@ if [[ "${current_ref}" != "refs/heads/${default_branch}" ]] ; then
     echo "PRE_RELEASE_LABEL=${pre_release}" >> "${GITHUB_OUTPUT}"
 fi
 
-if [[ -z "$(echo "${new_version}" | ${grep} -P "${pcre_semver}")" ]] ; then
+if [[ -z "$(echo "${new_version}" | grep_p "${pcre_semver}")" ]] ; then
     echo "🛑 Version incrementing has failed to produce a semver compliant version" 1>&2
     echo "ℹ️ See: https://semver.org/spec/v2.0.0.html" 1>&2
     echo "ℹ️ Failed version string: '${new_version}'" 1>&2

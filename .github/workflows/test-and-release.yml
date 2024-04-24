@@ -72,12 +72,20 @@ jobs:
       - lint
       - test
       - test-api-mode
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os:
+          - macos-latest
+          - ubuntu-latest
+          # - windows-latest  -- coming soon, https://github.com/reecetech/version-increment/pull/30
+      fail-fast: true
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout code  # have to checkout to have the source code available
         uses: actions/checkout@v4
 
       - name: Remove .git directory  # remove the git directory to make the testing valid
+        shell: bash
         run: rm -rf .git/
 
       - name: Get next version via API
