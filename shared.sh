@@ -49,16 +49,34 @@ if [[ "${use_api}" == 'true' ]] ; then
 fi
 
 ##==----------------------------------------------------------------------------
-##  MacOS compatibility - for local testing
+##  MacOS compatibility
 
-export grep="grep"
-if [[ "$(uname)" == "Darwin" ]] ; then
-    export grep="ggrep"
-    if ! grep --version 1>/dev/null ; then
+export use_perl="false"
+export use_gnugrep="false"
+if [[ "${GITHUB_ACTIONS:-}" == 'true' && "$(uname)" == 'Darwin' ]] ; then
+    export use_perl="true"
+elif [[ "$(uname)" == 'Darwin' ]] ; then
+    if perl --version 1>/dev/null ; then
+        export use_perl="true"
+    elif ! ggrep --version 1>/dev/null ; then
         echo "🛑 GNU grep not installed, try brew install coreutils" 1>&2
         exit 9
+    else
+        export use_gnugrep="true"
     fi
 fi
+
+function grep_p() {
+    if [[ "${use_perl}" == 'true' ]] ; then
+        perl -ne "print if /${1}/"
+    elif [[ "${use_gnugrep}" == 'true' ]] ; then
+        # shellcheck disable=SC2086
+        ggrep -P "${1}"
+    else
+        # shellcheck disable=SC2086
+        command grep -P "${1}"
+    fi
+}
 
 ##==----------------------------------------------------------------------------
 ##  Non GitHub compatibility - for testing both locally and in BATS
