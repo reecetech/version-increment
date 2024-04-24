@@ -2,6 +2,10 @@
 
 ## Use 📄
 
+> [!NOTE]
+> This action is confirmed to work on all three of GitHub's hosted runners - 
+> `ubuntu-latest`, `macos-latest` and `windows-latest` - at the point in time of the release of the action
+
 ### Example ⌨️
 
 ```yaml
@@ -9,7 +13,7 @@
         uses: actions/checkout@v4
 
       - name: Get next version
-        uses: reecetech/version-increment@2023.9.3
+        uses: reecetech/version-increment@2024.4.3
         id: version
         with:
           scheme: semver
@@ -30,7 +34,7 @@ use the API mode:
 
 ```yaml
       - name: Get next version
-        uses: reecetech/version-increment@2024.4.1
+        uses: reecetech/version-increment@2024.4.3
         id: version
         with:
           use_api: true
