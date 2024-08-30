@@ -40,6 +40,11 @@ inputs:
     description: 'Use the GitHub API to discover current tags, which avoids the need for a git checkout, but requires `curl` and `jq`'
     required: false
     default: false
+  tag_prefix:
+    description: |
+      Field to prefix the tag with a string (defaults to empty string). This is useful for projects that use a prefix in their tags. E.g. if set to `@org/product` the action will return `@org/product/1.2.3` as version.
+    required: false
+    default: false
 
 outputs:
   current-version:
@@ -86,6 +91,7 @@ runs:
         github_token: ${{ github.token }}
         scheme: ${{ inputs.scheme }}
         use_api: ${{ inputs.use_api }}
+        tag_prefix: ${{ inputs.tag_prefix }}
 
     - id: version-increment
       run: "${GITHUB_ACTION_PATH}/version-increment.sh"

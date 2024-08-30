@@ -23,6 +23,21 @@ fi
 ##==----------------------------------------------------------------------------
 ##  Version parsing
 
+# Function to extract the semver part from the tag
+extract_semver() {
+    local tag="$1"
+    if [[ -n "${tag_prefix:-}" ]]; then
+        # Escape special characters in tag_prefix
+        local escaped_prefix
+        escaped_prefix=$(printf '%s\n' "$tag_prefix" | sed 's/[][\/.^$*]/\\&/g')
+
+        # Use | as the delimiter to avoid conflicts with /
+        echo "${tag}" | sed "s|^${escaped_prefix}||"
+    else
+        echo "${tag}"
+    fi
+}
+
 # detect current version - removing "v" from start of tag if it exists
 if [[ "${use_api:-}" == 'true' ]] ; then
     current_version="$(
@@ -32,12 +47,18 @@ if [[ "${use_api:-}" == 'true' ]] ; then
             -H "X-GitHub-Api-Version: 2022-11-28" \
             "${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/git/matching-refs/tags/" \
         | jq -r '.[].ref' | sed 's|refs/tags/||g' \
-        | { grep_p "${pcre_allow_vprefix}" || true; } | sed 's/^v//g' | sort -V | tail -n 1
+        | { grep_p "${pcre_allow_vprefix}" || true; } \
+        | sed 's/^v//g' \
+        | while read -r tag; do extract_semver "$tag"; done \
+        | sort -V | tail -n 1
     )"
 else
     current_version="$(
         git tag -l \
-        | { grep_p "${pcre_allow_vprefix}" || true; } | sed 's/^v//g' | sort -V | tail -n 1
+        | { grep_p "${pcre_allow_vprefix}" || true; } \
+        | sed 's/^v//g' \
+        | while read -r tag; do extract_semver "$tag"; done \
+        | sort -V | tail -n 1
     )"
 fi
 

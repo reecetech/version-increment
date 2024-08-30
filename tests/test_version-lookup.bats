@@ -72,6 +72,37 @@ function init_repo {
     [[ "$output" = *"CURRENT_V_VERSION=v0.1.2"* ]]
 }
 
+@test "finds the current normal version with tag_prefix enabled" {
+    init_repo
+
+    export tag_prefix="@org/product"
+
+    git tag @org/product@0.0.1
+    git tag @org/product@0.1.1
+    git tag @org/product@0.1.2
+
+    run version-lookup.sh
+
+    print_run_info
+    [ "$status" -eq 0 ] &&
+    [[ "$output" = *"CURRENT_VERSION=0.1.2"* ]]
+}
+
+@test "tag_prefix enabled prefixes with a v" {
+    init_repo
+
+    export tag_prefix="@org/product"
+
+    git tag @org/product@0.1.2
+
+    run version-lookup.sh
+
+    print_run_info
+    [ "$status" -eq 0 ] &&
+    [[ "$output" = *"CURRENT_VERSION=0.1.2"* ]] &&
+    [[ "$output" = *"CURRENT_V_VERSION=v0.1.2"* ]]
+}
+
 @test "finds the current normal version even if there's a newer pre-release version" {
     init_repo
 

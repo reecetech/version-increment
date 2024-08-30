@@ -15,8 +15,8 @@ fi
 if [[ -z "${current_version:-}" ]] ; then
     echo "🛑 Environment variable 'current_version' is unset or empty" 1>&2
     input_errors='true'
-elif [[ -z "$(echo "${current_version}" | grep_p "${pcre_master_ver}")" ]] ; then
-    echo "🛑 Environment variable 'current_version' is not a valid normal version (M.m.p)" 1>&2
+elif [[ -z "$(echo "${current_version}" | grep_p "${pcre_allow_prefix}")" ]] ; then
+    echo "🛑 Environment variable 'current_version' is not a valid normal version (M.m.p) or (prefix@M.m.p)" 1>&2
     input_errors='true'
 fi
 
@@ -108,7 +108,8 @@ elif [[ "${increment}" == 'major' ]] ; then
     version_array[2]='0'
 fi
 
-new_version="${version_array[0]}.${version_array[1]}.${version_array[2]}"
+new_version="${tag_prefix}${version_array[0]}.${version_array[1]}.${version_array[2]}"
+new_v_version="${tag_prefix}v${version_array[0]}.${version_array[1]}.${version_array[2]}"
 
 # check we haven't accidentally forgotten to set scheme to calver
 # TODO: provide an override "I know my version numbers are > 2020, but it's semver!" option
@@ -139,7 +140,7 @@ echo "ℹ️ The new version is ${new_version}"
 
 # shellcheck disable=SC2129
 echo "VERSION=${new_version}" >> "${GITHUB_OUTPUT}"
-echo "V_VERSION=v${new_version}" >> "${GITHUB_OUTPUT}"
+echo "V_VERSION=${new_v_version}" >> "${GITHUB_OUTPUT}"
 echo "MAJOR_VERSION=${version_array[0]}" >> "${GITHUB_OUTPUT}"
 echo "MINOR_VERSION=${version_array[1]}" >> "${GITHUB_OUTPUT}"
 echo "PATCH_VERSION=${version_array[2]}" >> "${GITHUB_OUTPUT}"
