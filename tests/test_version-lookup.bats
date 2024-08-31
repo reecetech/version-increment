@@ -75,7 +75,7 @@ function init_repo {
 @test "finds the current normal version with tag_prefix enabled" {
     init_repo
 
-    export tag_prefix="@org/product"
+    export tag_prefix="@org/product@"
 
     git tag @org/product@0.0.1
     git tag @org/product@0.1.1
@@ -91,9 +91,9 @@ function init_repo {
 @test "tag_prefix enabled prefixes with a v" {
     init_repo
 
-    export tag_prefix="@org/product"
+    export tag_prefix="@org/product/"
 
-    git tag @org/product@0.1.2
+    git tag @org/product/0.1.2
 
     run version-lookup.sh
 
@@ -119,10 +119,10 @@ function init_repo {
 @test "finds only prefixed tags when tag_prefix set" {
     init_repo
 
-    export tag_prefix="@org/product"
+    export tag_prefix="my_product-"
 
-    git tag @org/product@0.1.2
-    git tag @org/product@0.1.3-dev.123
+    git tag my_product-0.1.2
+    git tag my_product-0.1.3-dev.123
     git tag 2.4.5
     git tag 2.4.6-dev.456
 

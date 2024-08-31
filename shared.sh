@@ -12,7 +12,6 @@ export LC_ALL=C.UTF-8
 pcre_semver='^(?P<major>0|[1-9]\d*)\.(?P<minor>0|[1-9]\d*)\.(?P<patch>0|[1-9]\d*)(?:-(?P<prerelease>(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+(?P<buildmetadata>[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$'
 pcre_master_ver='^(?P<major>0|[1-9]\d*)\.(?P<minor>0|[1-9]\d*)\.(?P<patch>0|[1-9]\d*)$'
 pcre_allow_vprefix="^v{0,1}${pcre_master_ver:1}"
-
 pcre_old_calver='^(?P<major>0|[1-9]\d*)-0{0,1}(?P<minor>0|[0-9]\d*)-R(?P<patch>0|[1-9]\d*)$'
 
 ##==----------------------------------------------------------------------------
@@ -25,6 +24,10 @@ remove_prefix() {
         local escaped_prefix
         escaped_prefix=$(printf '%s\n' "$tag_prefix" | sed 's/[][\/.^$*]/\\&/g')
 
+        if [[ -z "$(echo "${tag}" | grep "^${tag_prefix}")" ]] ; then
+            echo ""
+            return
+        fi
         # Use | as the delimiter to avoid conflicts with /
         echo "${tag}" | sed "s|^${escaped_prefix}||"
     else

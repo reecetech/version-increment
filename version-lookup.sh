@@ -32,17 +32,17 @@ if [[ "${use_api:-}" == 'true' ]] ; then
             -H "X-GitHub-Api-Version: 2022-11-28" \
             "${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/git/matching-refs/tags/" \
         | jq -r '.[].ref' | sed 's|refs/tags/||g' \
+        | while read -r tag; do remove_prefix "$tag"; done \
         | { grep_p "${pcre_allow_vprefix}" || true; } \
         | sed 's/^v//g' \
-        | while read -r tag; do remove_prefix "$tag"; done \
         | sort -V | tail -n 1
     )"
 else
     current_version="$(
         git tag -l \
+        | while read -r tag; do remove_prefix "$tag"; done \
         | { grep_p "${pcre_allow_vprefix}" || true; } \
         | sed 's/^v//g' \
-        | while read -r tag; do remove_prefix "$tag"; done \
         | sort -V | tail -n 1
     )"
 fi
