@@ -72,6 +72,37 @@ function init_repo {
     [[ "$output" = *"CURRENT_V_VERSION=v0.1.2"* ]]
 }
 
+@test "finds the current normal version with tag_prefix enabled" {
+    init_repo
+
+    export tag_prefix="@org/product@"
+
+    git tag @org/product@0.0.1
+    git tag @org/product@0.1.1
+    git tag @org/product@0.1.2
+
+    run version-lookup.sh
+
+    print_run_info
+    [ "$status" -eq 0 ] &&
+    [[ "$output" = *"CURRENT_VERSION=0.1.2"* ]]
+}
+
+@test "tag_prefix enabled prefixes with a v" {
+    init_repo
+
+    export tag_prefix="@org/product/"
+
+    git tag @org/product/0.1.2
+
+    run version-lookup.sh
+
+    print_run_info
+    [ "$status" -eq 0 ] &&
+    [[ "$output" = *"CURRENT_VERSION=0.1.2"* ]] &&
+    [[ "$output" = *"CURRENT_V_VERSION=v0.1.2"* ]]
+}
+
 @test "finds the current normal version even if there's a newer pre-release version" {
     init_repo
 
@@ -83,6 +114,24 @@ function init_repo {
     print_run_info
     [ "$status" -eq 0 ] &&
     [[ "$output" = *"CURRENT_VERSION=1.2.300"* ]]
+}
+
+@test "finds only prefixed tags when tag_prefix set" {
+    init_repo
+
+    export tag_prefix="my_product-"
+
+    git tag my_product-0.1.2
+    git tag my_product-0.1.3-dev.123
+    git tag 2.4.5
+    git tag 2.4.6-dev.456
+
+    run version-lookup.sh
+
+    print_run_info
+    [ "$status" -eq 0 ] &&
+    [[ "$output" = *"CURRENT_VERSION=0.1.2"* ]] &&
+    [[ "$output" = *"CURRENT_V_VERSION=v0.1.2"* ]]
 }
 
 @test "returns 0.0.0 if no normal version detected" {
@@ -99,6 +148,20 @@ function init_repo {
     init_repo
 
     git tag 0.0.1-dev.999
+
+    run version-lookup.sh
+
+    print_run_info
+    [ "$status" -eq 0 ] &&
+    [[ "$output" = *"CURRENT_VERSION=0.0.0"* ]]
+}
+
+@test "returns 0.0.0 if no prefix version detected even if there's a non-prefix release version" {
+    init_repo
+
+    export tag_prefix="code/"
+
+    git tag 0.1.0
 
     run version-lookup.sh
 

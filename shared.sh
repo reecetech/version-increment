@@ -15,6 +15,27 @@ pcre_allow_vprefix="^v{0,1}${pcre_master_ver:1}"
 pcre_old_calver='^(?P<major>0|[1-9]\d*)-0{0,1}(?P<minor>0|[0-9]\d*)-R(?P<patch>0|[1-9]\d*)$'
 
 ##==----------------------------------------------------------------------------
+##  Utility function for removing tag_prefix if present
+
+remove_prefix() {
+    local tag="$1"
+    if [[ -n "${tag_prefix:-}" ]]; then
+        # Escape special characters in tag_prefix
+        local escaped_prefix
+        escaped_prefix=$(printf '%s\n' "$tag_prefix" | sed 's/[][\/.^$*]/\\&/g')
+
+        if [[ -z "$(echo "${tag}" | grep "^${tag_prefix}")" ]] ; then
+            echo ""
+            return
+        fi
+        # Use | as the delimiter to avoid conflicts with /
+        echo "${tag}" | sed "s|^${escaped_prefix}||"
+    else
+        echo "${tag}"
+    fi
+}
+
+##==----------------------------------------------------------------------------
 ## Conventional commit regexes
 ## see: https://www.conventionalcommits.org/en/v1.0.0/
 
@@ -50,6 +71,9 @@ if [[ "${use_api}" == 'true' ]] ; then
         input_errors='true'
     fi
 fi
+
+# Check if the tag_prefix is set, and if not, set it to an empty string
+tag_prefix="${tag_prefix:-}"
 
 ##==----------------------------------------------------------------------------
 ##  MacOS compatibility

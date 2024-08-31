@@ -40,6 +40,11 @@ inputs:
     description: 'Use the GitHub API to discover current tags, which avoids the need for a git checkout, but requires `curl` and `jq`'
     required: false
     default: false
+  tag_prefix:
+    description: |
+      Prefix the tag with a string (defaults to empty string).  e.g. if set to `@org/product/` the action will filter by this prefix and return `@org/product/1.2.3` in `prefixed-version` output
+    required: false
+    default: false
 
 outputs:
   current-version:
@@ -75,6 +80,12 @@ outputs:
   patch-v-version:
     description: 'Patch number of the incremented version, prefixed with a `v` charatcter'
     value: ${{ steps.version-increment.outputs.PATCH_V_VERSION }}
+  prefixed-version:
+    description: 'Incremented version calculated, including a `tag_prefix` if specified'
+    value: ${{ inputs.tag_prefix}}${{ steps.version-increment.outputs.VERSION }}
+  prefixed-v-version:
+    description: 'Incremented version calculated, prefixed with a `v` charatcter, and also including a `tag_prefix` if specified'
+    value: ${{ inputs.tag_prefix}}${{ steps.version-increment.outputs.V_VERSION }}
 
 runs:
   using: "composite"
@@ -86,6 +97,7 @@ runs:
         github_token: ${{ github.token }}
         scheme: ${{ inputs.scheme }}
         use_api: ${{ inputs.use_api }}
+        tag_prefix: ${{ inputs.tag_prefix }}
 
     - id: version-increment
       run: "${GITHUB_ACTION_PATH}/version-increment.sh"
