@@ -114,6 +114,21 @@ jobs:
           [[ "${{ steps.version-via-api.outputs.patch-version }}" == "${{ steps.version-via-git.outputs.patch-version }}" ]]
           # Don't test the full version or pre-version, since the number of digits is likely to be different (9 via api vs. 7 via git)
 
+      - name: Get next version via Git with tag-prefix
+        uses: ./
+        id: version-prefix
+        with:
+          scheme: 'semver'
+          use_api: false
+          tag_prefix: 'foo/bar@'
+
+      - name: Check that it starts from 0.0.1 (since prefix doesn't exist)
+        shell: bash
+        run: |
+          [[ "${{ steps.version-prefix.outputs.current-version }}" == "0.0.0" ]]
+          [[ "${{ steps.version-prefix.outputs.version }}" == "0.0.1" ]]
+          [[ "${{ steps.version-prefix.outputs.prefixed-version }}" == "foo/bar@0.0.1" ]]
+
   release:
     needs:
       - test-action-yml

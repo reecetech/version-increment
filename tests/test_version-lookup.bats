@@ -156,6 +156,20 @@ function init_repo {
     [[ "$output" = *"CURRENT_VERSION=0.0.0"* ]]
 }
 
+@test "returns 0.0.0 if no prefix version detected even if there's a non-prefix release version" {
+    init_repo
+
+    export tag_prefix="code/"
+
+    git tag 0.1.0
+
+    run version-lookup.sh
+
+    print_run_info
+    [ "$status" -eq 0 ] &&
+    [[ "$output" = *"CURRENT_VERSION=0.0.0"* ]]
+}
+
 @test "returns a calver if no normal version detected and calver scheme specified" {
     init_repo
 

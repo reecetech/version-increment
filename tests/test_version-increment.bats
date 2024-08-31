@@ -414,8 +414,8 @@ function init_repo {
 @test "increments the patch version by default if no conventional commits found and enabled (conventional commits) (with tag_prefix)" {
     init_repo
 
-    export tag_prefix="@org/product"
-    export current_version="@org/product@1.2.3"
+    export tag_prefix="@org/product@"
+    export current_version="1.2.3"
     export scheme="conventional_commits"
 
     echo "some new change" > feat.txt
@@ -426,7 +426,7 @@ function init_repo {
 
     print_run_info
     [ "$status" -eq 0 ] &&
-    [[ "$output" = *"VERSION=@org/product@1.2.4"* ]]
-    [[ "$output" = *"V_VERSION=@org/product@v1.2.4"* ]]
+    [[ "$output" = *"VERSION=1.2.4"* ]]
+    [[ "$output" = *"V_VERSION=v1.2.4"* ]]
     [[ "$output" = *"No conventional commit found"* ]]
 }
