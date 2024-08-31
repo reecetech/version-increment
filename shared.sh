@@ -11,12 +11,26 @@ export LC_ALL=C.UTF-8
 
 pcre_semver='^(?P<major>0|[1-9]\d*)\.(?P<minor>0|[1-9]\d*)\.(?P<patch>0|[1-9]\d*)(?:-(?P<prerelease>(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+(?P<buildmetadata>[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$'
 pcre_master_ver='^(?P<major>0|[1-9]\d*)\.(?P<minor>0|[1-9]\d*)\.(?P<patch>0|[1-9]\d*)$'
+pcre_allow_vprefix="^v{0,1}${pcre_master_ver:1}"
 
-# Extended regex to allow arbitrary prefixes before the semver
-pcre_allow_prefix='^.*(?P<semver>'"${pcre_master_ver:1}"')$'
-
-pcre_allow_vprefix="^v{0,1}${pcre_allow_prefix:1}"
 pcre_old_calver='^(?P<major>0|[1-9]\d*)-0{0,1}(?P<minor>0|[0-9]\d*)-R(?P<patch>0|[1-9]\d*)$'
+
+##==----------------------------------------------------------------------------
+##  Utility function for removing tag_prefix if present
+
+remove_prefix() {
+    local tag="$1"
+    if [[ -n "${tag_prefix:-}" ]]; then
+        # Escape special characters in tag_prefix
+        local escaped_prefix
+        escaped_prefix=$(printf '%s\n' "$tag_prefix" | sed 's/[][\/.^$*]/\\&/g')
+
+        # Use | as the delimiter to avoid conflicts with /
+        echo "${tag}" | sed "s|^${escaped_prefix}||"
+    else
+        echo "${tag}"
+    fi
+}
 
 ##==----------------------------------------------------------------------------
 ## Conventional commit regexes
@@ -57,12 +71,6 @@ fi
 
 # Check if the tag_prefix is set, and if not, set it to an empty string
 tag_prefix="${tag_prefix:-}"
-
-# Add a trailing @ to tag_prefix if it doesn't already end with one
-if [[ -n "$tag_prefix" && "${tag_prefix: -1}" != "@" ]]; then
-    tag_prefix="${tag_prefix}@"
-fi
-
 
 ##==----------------------------------------------------------------------------
 ##  MacOS compatibility

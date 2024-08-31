@@ -133,7 +133,6 @@ function init_repo {
     [[ "$output" = *"CURRENT_VERSION=0.1.2"* ]] &&
     [[ "$output" = *"CURRENT_V_VERSION=v0.1.2"* ]]
 }
-}
 
 @test "returns 0.0.0 if no normal version detected" {
     init_repo
