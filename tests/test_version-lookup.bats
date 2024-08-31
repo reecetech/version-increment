@@ -116,6 +116,25 @@ function init_repo {
     [[ "$output" = *"CURRENT_VERSION=1.2.300"* ]]
 }
 
+@test "finds only prefixed tags when tag_prefix set" {
+    init_repo
+
+    export tag_prefix="@org/product"
+
+    git tag @org/product@0.1.2
+    git tag @org/product@0.1.3-dev.123
+    git tag 2.4.5
+    git tag 2.4.6-dev.456
+
+    run version-lookup.sh
+
+    print_run_info
+    [ "$status" -eq 0 ] &&
+    [[ "$output" = *"CURRENT_VERSION=0.1.2"* ]] &&
+    [[ "$output" = *"CURRENT_V_VERSION=v0.1.2"* ]]
+}
+}
+
 @test "returns 0.0.0 if no normal version detected" {
     init_repo
 
