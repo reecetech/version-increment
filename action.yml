@@ -42,7 +42,7 @@ inputs:
     default: false
   tag_prefix:
     description: |
-      Field to prefix the tag with a string (defaults to empty string). This is useful for projects that use a prefix in their tags. E.g. if set to `@org/product` the action will return `@org/product/1.2.3` as version.
+      Prefix the tag with a string (defaults to empty string).  e.g. if set to `@org/product/` the action will filter by this prefix and return `@org/product/1.2.3` in `prefixed-version` output
     required: false
     default: false
 
