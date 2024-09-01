@@ -78,7 +78,7 @@ jobs:
           - macos-latest
           - ubuntu-latest
           - windows-latest
-      fail-fast: true
+      fail-fast: false
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout code  # have to checkout to have the source code available
@@ -126,8 +126,11 @@ jobs:
         shell: bash
         run: |
           [[ "${{ steps.version-prefix.outputs.current-version }}" == "0.0.0" ]]
-          [[ "${{ steps.version-prefix.outputs.version }}" == "0.0.1" ]]
-          [[ "${{ steps.version-prefix.outputs.prefixed-version }}" == "foo/bar@0.0.1" ]]
+          [[ "${{ steps.version-prefix.outputs.major-version }}" == "0" ]]
+          [[ "${{ steps.version-prefix.outputs.minor-version }}" == "0" ]]
+          [[ "${{ steps.version-prefix.outputs.patch-version }}" == "1" ]]
+          [[ "${{ steps.version-prefix.outputs.version }}" = "0.0.1-"* ]]
+          [[ "${{ steps.version-prefix.outputs.prefixed-version }}" = "foo/bar@0.0.1-"* ]]
 
   release:
     needs:

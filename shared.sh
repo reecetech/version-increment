@@ -22,14 +22,15 @@ remove_prefix() {
     if [[ -n "${tag_prefix:-}" ]]; then
         # Escape special characters in tag_prefix
         local escaped_prefix
-        escaped_prefix=$(printf '%s\n' "$tag_prefix" | sed 's/[][\/.^$*]/\\&/g')
+        escaped_prefix=$(printf '%s\n' "$tag_prefix" | sed 's/[][\/.^$*]/\\&/g')  # special chars matched by sed: ] [ / . ^ $ *
 
+	# shellcheck disable=SC2143
         if [[ -z "$(echo "${tag}" | grep "^${tag_prefix}")" ]] ; then
             echo ""
             return
         fi
-        # Use | as the delimiter to avoid conflicts with /
-        echo "${tag}" | sed "s|^${escaped_prefix}||"
+	# shellcheck disable=SC2001
+        echo "${tag}" | sed "s|^${escaped_prefix}||"  # Use | as the delimiter to avoid conflicts with /
     else
         echo "${tag}"
     fi
