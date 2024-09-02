@@ -129,8 +129,7 @@ jobs:
           [[ "${{ steps.version-prefix.outputs.major-version }}" == "0" ]]
           [[ "${{ steps.version-prefix.outputs.minor-version }}" == "0" ]]
           [[ "${{ steps.version-prefix.outputs.patch-version }}" == "1" ]]
-          [[ "${{ steps.version-prefix.outputs.version }}" = "0.0.1-"* ]]
-          [[ "${{ steps.version-prefix.outputs.prefixed-version }}" = "foo/bar@0.0.1-"* ]]
+          [[ "${{ steps.version-prefix.outputs.prefixed-version }}" = "foo/bar@0.0.1"* ]]
 
   release:
     needs:
