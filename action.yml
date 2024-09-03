@@ -44,7 +44,7 @@ inputs:
     description: |
       Prefix the tag with a string (defaults to empty string).  e.g. if set to `@org/product/` the action will filter by this prefix and return `@org/product/1.2.3` in `prefixed-version` output
     required: false
-    default: false
+    default: ''
 
 outputs:
   current-version:
