@@ -139,19 +139,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Lookup version
-        id: version-lookup
-        run: ./version-lookup.sh
-
-      - name: Increment version
-        id: version-increment
-        run: ./version-increment.sh
-        env:
-          current_version: ${{ steps.version-lookup.outputs.CURRENT_VERSION }}
-          scheme: calver
+      - name: Get next version
+        uses: ./
+        id: version
+        with:
+          scheme: 'calver'
 
       - name: Release version
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         if: ${{ github.ref_name == github.event.repository.default_branch }}
         with:
           draft: false
