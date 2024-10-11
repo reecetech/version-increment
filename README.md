@@ -13,7 +13,7 @@
         uses: actions/checkout@v4
 
       - name: Get next version
-        uses: reecetech/version-increment@2024.4.3
+        uses: reecetech/version-increment@2024.10.1
         id: version
         with:
           scheme: semver
@@ -34,7 +34,7 @@ use the API mode:
 
 ```yaml
       - name: Get next version
-        uses: reecetech/version-increment@2024.4.3
+        uses: reecetech/version-increment@2024.10.1
         id: version
         with:
           use_api: true
