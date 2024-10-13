@@ -151,4 +151,4 @@ jobs:
         with:
           draft: false
           prerelease: false
-          tag_name: "${{ steps.version-increment.outputs.VERSION }}"
+          tag_name: "${{ steps.version.outputs.version }}"
